@@ -157,6 +157,8 @@ erDiagram
 
 ```
 
+
+![[logical erd.svg]]
 ## 1) Users / Auth
 
 ### `users`
