@@ -60,7 +60,6 @@ markdown_extensions:
 
 plugins:
   - search
-  - literate-nav
   - panzoom:
       full_screen: True
       include_selectors:
