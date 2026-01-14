@@ -21,6 +21,17 @@ theme:
         icon: material/toggle-switch
         name: "라이트 모드로 전환"
 
+    features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+
+nav:
+  - Home: index.md
+  - 기획: 기획/
+  - 설계: 설계/
+  - 컨벤션: 컨벤션/
+  - API: API/
+
 # Extensions
 markdown_extensions:
   - footnotes
@@ -49,6 +60,7 @@ markdown_extensions:
 
 plugins:
   - search
+  - literate-nav
   - panzoom:
       full_screen: True
       include_selectors:
@@ -69,4 +81,3 @@ extra_javascript:
   - javascripts/mermaid.mjs
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-  - https://unpkg.com/mermaid/dist/mermaid.min.js 
