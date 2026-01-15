@@ -185,10 +185,11 @@
   },
   "active": "74a8d114d703f4d0",
   "lastOpenFiles": [
+    "docs/API/index.md",
+    "docs/API/api (가버전)/API 가버전.md",
     "로그인.md",
     "readme.md",
     "로그아웃.md",
-    "docs/API/api (가버전)/API 가버전.md",
     "프로필 사진 수정.md",
     "방 목록 확인.md",
     "요청값.md",
@@ -197,7 +198,6 @@
     "무제.base",
     "docs/설계/index.md",
     "docs/api (가버전)/무제.base",
-    "docs/API/index.md",
     "docs/api (가버전)/무제.canvas",
     "docs/API/api (가버전)",
     "docs/기획/index.md"
