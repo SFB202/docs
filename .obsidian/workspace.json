@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/API/api (가버전)/API 가버전.md",
+                "file": "docs/API/API 가버전.md",
                 "mode": "source",
                 "source": false
               },
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/API/api (가버전)/API 가버전.md",
+                "file": "docs/API/API 가버전.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,7 +113,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/API/api (가버전)/API 가버전.md",
+                "file": "docs/API/API 가버전.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -156,7 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/API/api (가버전)/API 가버전.md",
+                "file": "docs/API/API 가버전.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -185,8 +185,18 @@
   },
   "active": "74a8d114d703f4d0",
   "lastOpenFiles": [
-    "docs/API/index.md",
     "docs/API/api (가버전)/API 가버전.md",
+    "docs/API/API 가버전.md",
+    "docs/API/프로필 사진 수정.md",
+    "docs/API/요청값.md",
+    "docs/API/방 목록 확인.md",
+    "docs/API/무제.base",
+    "docs/API/로그아웃.md",
+    "docs/설계/svg/architecture.svg",
+    "docs/설계/svg",
+    "docs/설계/Architecture.md",
+    "docs/API/로그인.md",
+    "docs/API/index.md",
     "로그인.md",
     "readme.md",
     "로그아웃.md",
