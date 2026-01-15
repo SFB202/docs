@@ -59,6 +59,7 @@ markdown_extensions:
       permalink: true
 
 plugins:
+  - redoc-tag
   - search
   - literate-nav
   - panzoom:
