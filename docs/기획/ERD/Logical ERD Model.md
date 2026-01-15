@@ -163,15 +163,15 @@ erDiagram
 
 ### `users`
 
-|컬럼|타입|설명|제약|
-|---|---|---|---|
-|id|BIGINT|내부 PK|PK|
-|github_id|BIGINT|GitHub numeric user id|UNIQUE|
-|github_login|VARCHAR(100)|GitHub 로그인 아이디(@handle)|UNIQUE(권장)|
-|name|VARCHAR(100)|GitHub 표시 이름||
-|avatar_url|VARCHAR(500)|GitHub 프로필 이미지||
-|created_at|DATETIME|생성일||
-|last_login_at|DATETIME|마지막 로그인||
+| 컬럼            | 타입           | 설명                      | 제약         |
+| ------------- | ------------ | ----------------------- | ---------- |
+| id            | BIGINT       | 내부 PK                   | PK         |
+| github_id     | BIGINT       | GitHub numeric user id  | UNIQUE     |
+| github_login  | VARCHAR(100) | GitHub 로그인 아이디(@handle) | UNIQUE(권장) |
+| name          | VARCHAR(100) | GitHub 표시 이름            |            |
+| avatar_url    | VARCHAR(500) | GitHub 프로필 이미지          |            |
+| created_at    | DATETIME     | 생성일                     |            |
+| last_login_at | DATETIME     | 마지막 로그인                 |            |
 
 **인덱스/제약 권장**
 
