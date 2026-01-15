@@ -22,7 +22,9 @@
 | 회의실 삭제          | DELETE   | /api/v1/rooms/{id}/sessions/{sId}  |         | 200 OK   |          |          |      |
 | 회의실 이름 수정       | PATCH    | /api/v1/rooms/{id}/sessions/{sId}  |         |          |          |          |      |
 | 진행중인 이슈 5개 불러오기 | GET      | /api/v1/rooms/{id}/issues/active   |         |          |          |          |      |
-| 캘린더 관리(?)       |          |                                    |         |          |          |          |      |
+| 캘린더 생성          | POST     | /api/v1/rooms/{id}/calendar        |         |          |          |          |      |
+| 캘린더 수정          | PATCH    | /api/v1/calendar/{cId}             |         |          |          |          |      |
+| 캘린더 삭제          | DELETE   | /api/v1/calendar/{cId}             |         |          |          |          |      |
 ### 회의실
 
 | 기능          | HTTP 메서드 | API Path                            | Request | Response | 진행도(백엔드) | 진행도(프론트) | 우선순위 |
