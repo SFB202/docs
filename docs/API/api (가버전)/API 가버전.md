@@ -26,6 +26,7 @@
 | 캘린더 생성          | POST     | /api/v1/rooms/{id}/calendar        |         |          |          |          |      |
 | 캘린더 수정          | PATCH    | /api/v1/calendar/{cId}             |         |          |          |          |      |
 | 캘린더 삭제          | DELETE   | /api/v1/calendar/{cId}             |         |          |          |          |      |
+| 전체 회의록 검색       | GET      | /api/v1/rooms/{id}/meetings/search |         |          |          |          |      |
 
 ### 회의실
 
