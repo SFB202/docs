@@ -59,7 +59,13 @@
 - **Docker Engine / Docker Compose** _(서비스 컨테이너 구성/배포)_
     
 - **GitLab CI/CD** _(빌드/테스트/배포 자동화)_
+
+
+### Storage
+
+- **Docker Volume**
     
+
 
 ### OS
 
