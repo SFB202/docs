@@ -1,48 +1,15 @@
-``` mermaid
-flowchart LR
-  U["User Browser<br/>React SPA"] -->|HTTPS| RP["Reverse Proxy<br/>Traefik"]
 
-  RP --> FE["Frontend Static<br/>React Build"]
-  RP --> API["Backend API<br/>Java Spring Boot"]
-  RP --> OV["Media Server<br/>OpenVidu"]
-
-  U <-->|WS or SSE<br/>Realtime notify chat| RP
-  RP <-->|WS or SSE| API
-
-  U <-->|WebRTC Media<br/>Audio Video| OV
-  API <-->|Session Token control| OV
-
-  API --> DB[("MySQL")]
-  API --> ES[("Elasticsearch")]
-  API --> GH["GitHub API"]
-
-  subgraph HOST["Host OS<br/>Ubuntu Server 20.04"]
-    subgraph DOCKER["Docker Engine<br/>Docker Compose"]
-      RP
-      FE
-      API
-      OV
-      DB
-      ES
-    end
-  end
-
-  subgraph CICD["GitLab CI/CD"]
-    CI["Build Test<br/>Docker image build"] --> CD["Deploy<br/>Compose update restart"]
-  end
-
-  CICD --> HOST
-  note["Container Base<br/>Alpine Linux"] -.-> DOCKER
-
-```
 ![[architecture.svg]]
+
 ### Frontend (FE)
 
 - **React**
     
 
 ### Reverse Proxy / Ingress
--  **Traefik**
+
+- **Traefik** 
+    
 
 ### Backend (BE)
 
@@ -54,24 +21,44 @@ flowchart LR
     
 - **JPA**
     
+- **SSE (Server-Sent Events)** 
+    
+
+### AI / Worker (문서 요약 파이프라인)
+
+- **ffmpeg** _(webm → wav 변환)_
+    
+- **Whisper STT** _(전사)_
+    
+- **Claude API** _(요약/정리: summary, decisions, action_items, agenda, keywords)_
+    
+- **python-docx** _(DOCX 생성 옵션)_
+    
 
 ### Media Server
 
-- **OpenVidu**
+- **OpenVidu** _(WebRTC + audio-only recording)_
     
+
+### Messaging / Event Bus
+
+- **Redis (Pub/Sub 또는 Streams 권장)**
+    
+    - Spring → FastAPI 작업 요청 이벤트 / FastAPI → Spring 진행도·완료 이벤트
+        
 
 ### Data (DB / Search)
 
-- **MySQL**
+- **MySQL** _(Source of Truth)_
     
-- **Elasticsearch**
+- **Elasticsearch** _(검색/인덱싱)_
     
 
 ### Infra / DevOps
 
-- **Docker Engine / Docker Compose**
+- **Docker Engine / Docker Compose** _(서비스 컨테이너 구성/배포)_
     
-- **GitLab CI/CD**
+- **GitLab CI/CD** _(빌드/테스트/배포 자동화)_
     
 
 ### OS
@@ -79,4 +66,3 @@ flowchart LR
 - **Ubuntu Server 20.04** _(호스트 OS)_
     
 - **Alpine Linux** _(컨테이너 베이스 이미지/경량 런타임)_
-    
