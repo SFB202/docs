@@ -11,6 +11,7 @@
 | --------- | -------- | ---------------- | ------- | -------- | -------- | -------- | ---- |
 | 방 목록 확인   | GET      | /api/v1/rooms    |         |          |          |          |      |
 | 프로필 사진 수정 | PATCH    | /api/v1/users/me |         |          |          |          |      |
+
 ### 라운지
 
 | 기능              | HTTP 메서드 | API Path                           | Request | Response | 진행도(백엔드) | 진행도(프론트) | 우선순위 |
@@ -25,6 +26,8 @@
 | 캘린더 생성          | POST     | /api/v1/rooms/{id}/calendar        |         |          |          |          |      |
 | 캘린더 수정          | PATCH    | /api/v1/calendar/{cId}             |         |          |          |          |      |
 | 캘린더 삭제          | DELETE   | /api/v1/calendar/{cId}             |         |          |          |          |      |
+| 전체 회의록 검색       | GET      | /api/v1/rooms/{id}/meetings/search |         |          |          |          |      |
+| 방 탈퇴            | DELETE   | /api/v1/rooms/{id}/leave           |         |          |          |          |      |
 
 ### 회의실
 
@@ -40,12 +43,15 @@
 | 회의 녹음 시작    | POST     | /api/v1/meetings/{mId}/record/start |         |          |          |          |      |
 | 회의 녹음 종료    | POST     | /api/v1/meetings/{mId}/record/stop  |         |          |          |          |      |
 | 회의실 나가기     | DELETE   | /api/v1/meetings/{mId}/leave        |         |          |          |          |      |
-### 관리자
+
+### 팀장
 
 | 기능        | HTTP 메서드 | API Path                         | Request | Response | 진행도(백엔드) | 진행도(프론트) | 우선순위 |
 | --------- | -------- | -------------------------------- | ------- | -------- | -------- | -------- | ---- |
 | 방 생성      | POST     | /api/v1/rooms                    |         |          |          |          |      |
 | 프로젝트 불러오기 | GET      | /api/v1/repos                    |         |          |          |          |      |
 | 위임자 선정    | PATCH    | /api/v1/rooms/{id}/assign        |         |          |          |          |      |
-| 팀원추가      | POST     | /api/v1/rooms/{id}/members       |         |          |          |          |      |
 | 팀원 삭제     | DELETE   | /api/v1/rooms/{id}/members/{uId} |         |          |          |          |      |
+| 조직 목록 조회  | GET      | /api/v1/user/orgs                |         |          |          |          |      |
+| 초대 링크 생성  | POST     | /api/v1/rooms/{id}/invites       |         |          |          |          |      |
+| 팀원 추가(링크) | POST     | /api/v1/rooms/join/{inviteCode}  |         |          |          |          |      |

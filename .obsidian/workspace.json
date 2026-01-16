@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/API/API 가버전.md",
+                "file": "docs/API/API 가버전 1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "API 가버전"
+              "title": "API 가버전 1"
             }
           }
         ]
@@ -94,7 +94,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/API/API 가버전.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +103,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "API 가버전 의 백링크"
+              "title": "백링크"
             }
           },
           {
@@ -113,12 +112,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/API/API 가버전.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "API 가버전 의 나가는 링크"
+              "title": "나가는 링크"
             }
           },
           {
@@ -156,13 +154,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/API/API 가버전.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "API 가버전 의 개요"
+              "title": "개요"
             }
           }
         ]
@@ -185,16 +182,20 @@
   },
   "active": "74a8d114d703f4d0",
   "lastOpenFiles": [
-    "docs/API/api (가버전)/API 가버전.md",
+    "docs/API/API 가버전 Redoc.md",
+    "docs/API/API 가버전 1.md",
+    "docs/API/redoc/redoc.yaml",
+    "docs/API/redoc",
     "docs/API/API 가버전.md",
+    "docs/설계/svg/architecture.svg",
+    "docs/설계/svg",
+    "docs/설계/Architecture.md",
+    "docs/API/api (가버전)/API 가버전.md",
     "docs/API/프로필 사진 수정.md",
     "docs/API/요청값.md",
     "docs/API/방 목록 확인.md",
     "docs/API/무제.base",
     "docs/API/로그아웃.md",
-    "docs/설계/svg/architecture.svg",
-    "docs/설계/svg",
-    "docs/설계/Architecture.md",
     "docs/API/로그인.md",
     "docs/API/index.md",
     "로그인.md",
