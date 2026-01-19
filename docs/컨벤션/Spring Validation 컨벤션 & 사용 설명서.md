@@ -254,11 +254,3 @@ public record Wrapper(@Valid Inner inner) {}
 @Pattern(regexp="^[a-z0-9]+$", message="로그인 아이디는 영문 소문자와 숫자만 가능합니다.")
 String loginId
 ```
-
----
-
-원하면 다음도 같이 만들어줄게:
-
-- `@RestControllerAdvice` 예외 핸들러 표준 구현(Validation 에러 JSON 스펙 확정)
-    
-- Validation 에러를 너희 `ResultError(SimpleError)` 형태로 매핑해서 “응답 포맷을 하나로” 통일하는 규칙(팀 취향에 맞게)
