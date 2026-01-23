@@ -579,18 +579,3 @@ SecurityConfig에서 `permitAll()`로 열려있는 경로:
     
 - `ProjectUserStatus`: `PENDING`, `ACTIVE`
     
-
----
-
-## (권장) 코드-문서 정합성 이슈 2개 (현재 코드 그대로 관찰된 부분)
-
-1. `ResponseEntity.ok(result.getValue())` 때문에 **Optional이 응답으로 나갈 수 있음**
-    
-    - `AddInvite`, `createMeeting`에서 발생
-        
-    - 보통은 `result.getOrThrow()` 또는 `result.getValue().get()` 형태로 값만 내려주는 게 문서/클라이언트에 안전함
-        
-2. `cursor`가 `@RequestParam(required=false) long cursor`라서 **생략해도 0이 들어감**
-    
-    - truly optional이면 `Long cursor`로 변경이 안전
-        
