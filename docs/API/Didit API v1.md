@@ -1,53 +1,55 @@
 
-## 목차
+# Didit API 문서 V2 (Updated)
 
-- 공통 규칙
+## Base
+
+- Base URL: `/`
     
-- Auth
+- API Prefix: `/api/v1`
     
-- Projects
+
+## 인증 / 보안 (SecurityConfig 기준)
+
+### 인증 방식
+
+- Spring Security OAuth2 Login(GitHub) + 세션 쿠키(`JSESSIONID`)
     
-- Meetings
+- 로그인 성공 시 기본 리다이렉트: `/`
     
-- 데이터 모델 (DTO)
+
+### Public (인증 없이 접근 가능)
+
+SecurityConfig에서 `permitAll()`로 열려있는 경로:
+
+- `GET /`
     
-- Enums
+- `GET /api/v1/auth/login`
     
+- `/api/v1/auth/logout` _(logoutUrl로도 사용됨)_
+    
+- `/login/**`
+    
+- `/oauth2/**`
+    
+
+> 위 목록 **외 모든 API는 인증 필요** (`anyRequest().authenticated()`)
+
+### 로그아웃
+
+- SecurityConfig에서 처리
+    
+- `logoutUrl`: `/api/v1/auth/logout`
+    
+- 세션 invalidate + `JSESSIONID` 쿠키 삭제 + `/`로 리다이렉트
+    
+
+> HTTP 메서드(POST/GET)는 프로젝트 설정/필터에 따라 달라질 수 있어. 문서상으로는 일반적으로 **POST**를 권장.
 
 ---
 
-## 공통 규칙
+## 공통 응답: ErrorResponse
 
-### Base URL
-
-- `/{...}` (상대 경로 기준)
-    
-- API Prefix: 보통 `/api/v1`
-    
-
-### 인증 (Session Cookie)
-
-- 로그인 후 서버가 발급한 **세션 쿠키**를 사용
-    
-- 쿠키 이름: `JSESSIONID` (프로젝트 문서 기준)
-    
-
-예시:
-
-```bash
--H "Cookie: JSESSIONID=<session-id>"
-```
-
-### Content-Type
-
-- 요청 Body가 있는 경우:
-    
-    - `Content-Type: application/json`
-        
-
-### 에러 응답: `ErrorResponse`
-
-`ProjectController`의 대부분 API는 실패 시 아래 형태로 내려옴.
+서비스 레이어 `Result` 실패 시 Controller는 아래 형태의 에러를 내려줌:
 
 ```json
 {
@@ -56,43 +58,22 @@
 }
 ```
 
-> `ErrorResponse.java`의 필드는 `StatusCode`, `Message`지만, Jackson 직렬화 시 보통 `statusCode`, `message`로 내려가는 형태가 일반적이야.
+- `statusCode`: `HttpStatus` (예: `NOT_FOUND`, `FORBIDDEN`, `BAD_REQUEST`, `GONE` 등)
+    
+- `message`: 에러 메시지
+    
 
-### Result 래퍼: `Result<T>` (Meeting API에서 사용)
-
-`MeetingController`는 성공/실패를 **HTTP Status로 나누지 않고**, **항상 200 + Result 객체**를 반환함.
-
-```json
-{
-  "value": 123,
-  "success": true,
-  "errors": []
-}
-```
-
-실패 예시:
-
-```json
-{
-  "value": null,
-  "success": false,
-  "errors": [
-    { "code": 404, "message": "projectId not found" }
-  ]
-}
-```
-
-> `ResultError`의 정확한 필드는 업로드에 포함되지 않았지만, `Result.fail(int code, String message)`가 `SimpleError(code, message)`를 사용하므로 일반적으로 `code/message` 형태를 기대할 수 있어.
+> `ErrorResponse.java`의 필드명이 `StatusCode`, `Message`(대문자 시작)지만, Lombok getter 기준으로 보통 JSON은 `statusCode`, `message`로 직렬화되는 케이스가 많음.
 
 ---
 
-# Auth
+# 1) Auth API
 
-## 1) GitHub OAuth 로그인 시작
+## 1.1 로그인 시작 (GitHub OAuth 리다이렉트)
 
 - **GET** `/api/v1/auth/login`
     
-- 설명: 서버가 `/oauth2/authorization/github`로 **리다이렉트**
+- **Auth**: ❌ 불필요 (Public)
     
 
 ### Response
@@ -102,29 +83,56 @@
 - `Location: /oauth2/authorization/github`
     
 
-```bash
-curl -i -X GET /api/v1/auth/login
-```
-
 ---
 
-# Projects
+## 1.2 내 세션 확인 (테스트)
 
-> 컨트롤러 Prefix: `/api/v1/projects`
-
-## 1) 내 프로젝트 목록 조회
-
-- **GET** `/api/v1/projects`
+- **GET** `/api/v1/user/me`
     
-- Auth: **필요** (`@AuthenticationPrincipal CustomOAuth2User`)
-    
-- Response: `FindProjectResponse[]`
+- **Auth**: ✅ 필요
     
 
 ### Response
 
-- **200**
+`Result<Map<String,Object>>` 형태로 GitHub attributes 반환
+
+성공 예시:
+
+```json
+{
+  "value": {
+    "id": 123456,
+    "login": "octocat",
+    "name": "Octo Cat",
+    "avatar_url": "https://..."
+  },
+  "success": true,
+  "errors": []
+}
+```
+
+실패(비인증) 시:
+
+- 코드상 `Result.fail(401, "...").throwIfFailure()` 호출 → 예외 처리 흐름은 전역 예외 핸들러 구성에 따라 달라짐
     
+
+---
+
+# 2) Projects API (`/api/v1/projects`)
+
+## 2.1 프로젝트 목록 조회
+
+- **GET** `/api/v1/projects`
+    
+- **Auth**: ✅ 필요
+    
+
+### Response
+
+- **200** `ProjectResponse[]`
+    
+
+예시:
 
 ```json
 [
@@ -141,29 +149,20 @@ curl -i -X GET /api/v1/auth/login
 ]
 ```
 
-- **404**: userId not found
+### Error
+
+- 실패 시 `ErrorResponse` + 해당 HTTP Status
     
-
-```json
-{ "statusCode": "NOT_FOUND", "message": "..." }
-```
-
-### cURL
-
-```bash
-curl -X GET /api/v1/projects \
-  -H "Cookie: JSESSIONID=<session-id>"
-```
 
 ---
 
-## 2) 프로젝트 생성
+## 2.2 프로젝트 생성
 
 - **POST** `/api/v1/projects`
     
-- Auth: **필요**
+- **Auth**: ✅ 필요
     
-- Body: `AddProjectRequest`
+- **Body**: `AddProjectRequest`
     
 
 ### Request Body
@@ -175,44 +174,31 @@ curl -X GET /api/v1/projects \
 }
 ```
 
-- 유효성(코드 기준)
+### Validation (DTO 기준)
+
+- `projectName`: `@NotNull`, `@Size(max=64)`
     
-    - `projectName`: NotNull, max 64
-        
-    - `githubUrl`: NotNull, URL 형식
-        
+- `githubUrl`: `@NotNull`, `@URL`
+    
 
 ### Response
 
-- **200** (본문 없음)
+- **200** (Body 없음)
     
-- **400** validation fail → `ErrorResponse`
+- 실패 시 `ErrorResponse` + 해당 HTTP Status
     
-- **404** userId not found → `ErrorResponse`
-    
-- **407** repoFullName 중복 등 → `ErrorResponse`
-    
-    > (서비스 주석에 407로 명시)
-    
-
-### cURL
-
-```bash
-curl -X POST /api/v1/projects \
-  -H "Content-Type: application/json" \
-  -H "Cookie: JSESSIONID=<session-id>" \
-  -d '{"projectName":"didit","githubUrl":"https://github.com/org/repo"}'
-```
+    - 서비스 주석 기준: `404 userId`, `407 repoFullName 중복` 등
+        
 
 ---
 
-## 3) 프로젝트 초대코드 생성
+## 2.3 프로젝트 초대 코드 생성
 
 - **POST** `/api/v1/projects/invites`
     
-- Auth: **필요**
+- **Auth**: ✅ 필요
     
-- Body: `AddProjectInviteRequest`
+- **Body**: `AddProjectInviteRequest`
     
 
 ### Request Body
@@ -224,116 +210,101 @@ curl -X POST /api/v1/projects \
 }
 ```
 
-- `expireDate`가 `null`이면 서버에서:
+- `expireDate == null`이면 서버에서 `now + 1000 years`로 설정
     
-    - `now + 1000 years` 로 자동 설정
-        
 
 ### Response
 
-- **200**: 초대 코드(UUID)
+- **200**: `addResult.getValue()` 반환
     
 
-> 구현상 `addResult.getValue()`(Optional)를 그대로 반환하지만, 일반적인 Spring Boot Jackson 설정에서는 UUID 문자열로 직렬화되는 케이스가 많음.
+⚠️ **주의(코드 그대로 반영):**  
+`Result<UUID>.getValue()`는 `Optional<UUID>`인데, 컨트롤러가 Optional을 그대로 반환하고 있어요.
 
-예시:
+즉 응답이 환경(Jackson Optional 모듈 설정)에 따라:
+
+- `"550e..."` 같은 UUID 문자열로 내려올 수도 있고
+    
+- Optional 구조로 내려올 수도 있음
+    
+
+문서상 기대 값(의도):
 
 ```json
 "550e8400-e29b-41d4-a716-446655440000"
 ```
 
-- **403**: admin 권한 없음 → `ErrorResponse`
-    
-- **404**: userId / projectId not found → `ErrorResponse`
-    
+### Error
 
-### cURL
-
-```bash
-curl -X POST /api/v1/projects/invites \
-  -H "Content-Type: application/json" \
-  -H "Cookie: JSESSIONID=<session-id>" \
-  -d '{"projectId":1,"expireDate":null}'
-```
+- 실패 시 `ErrorResponse` + 해당 HTTP Status
+    
+    - 서비스 주석 기준: `403(어드민만)`, `404(userId/projectId)` 등
+        
 
 ---
 
-## 4) 초대코드로 프로젝트 조회
+## 2.4 초대 코드로 프로젝트 조회
 
 - **GET** `/api/v1/projects/invites/{inviteCode}`
     
-- Auth: **불필요**
+- **Auth**: ✅ 필요 _(SecurityConfig 기준: 이 경로는 permitAll 아님)_
     
-- Path Param:
+
+### Path Param
+
+- `inviteCode`: UUID 문자열
     
-    - `inviteCode`: UUID string
-        
 
 ### Response
 
-- **200**: `FindProjectResponse`
-    
-- **400**: inviteCode UUID 파싱 실패 → **본문 없음**
-    
-- **404**: inviteCode not found → `ErrorResponse`
-    
-- **410**: inviteCode expired → `ErrorResponse`
+- **200**: `ProjectResponse`
     
 
-### cURL
+### Error
 
-```bash
-curl -X GET /api/v1/projects/invites/550e8400-e29b-41d4-a716-446655440000
-```
+- **400**: UUID 파싱 실패 → Body 없음
+    
+- 서비스 실패 시 `ErrorResponse` + 상태코드
+    
+    - 서비스 주석 기준: `404 inviteCode`, `410 expired` 등
+        
 
 ---
 
-## 5) 초대코드로 프로젝트 참여
+## 2.5 초대 코드로 프로젝트 참여
 
 - **POST** `/api/v1/projects/invites/{inviteCode}`
     
-- Auth: **필요**
+- **Auth**: ✅ 필요
     
-- Path Param:
-    
-    - `inviteCode`: UUID string
-        
 
 ### Response
 
-- **200** (본문 없음)
-    
-- **400**: inviteCode UUID 파싱 실패 → **본문 없음**
-    
-- **404**: inviteCode/userId/projectId not found → `ErrorResponse`
-    
-- **410**: inviteCode expired → `ErrorResponse`
+- **200** (Body 없음)
     
 
-### cURL
+### Error
 
-```bash
-curl -X POST /api/v1/projects/invites/550e8400-e29b-41d4-a716-446655440000 \
-  -H "Cookie: JSESSIONID=<session-id>"
-```
+- **400**: UUID 파싱 실패 → Body 없음
+    
+- 실패 시 `ErrorResponse` + 상태코드
+    
 
 ---
 
-## 6) 프로젝트 참여자 목록 조회
+## 2.6 프로젝트 참여자 목록 조회
 
 - **GET** `/api/v1/projects/{projectId}/participants`
     
-- Auth: 코드상 AuthenticationPrincipal은 없어서 **불필요**(현재 구현 기준)
+- **Auth**: ✅ 필요 _(SecurityConfig 기준: permitAll 아님)_
     
-- Path Param:
-    
-    - `projectId`: long
-        
 
 ### Response
 
 - **200**: `UserResponse[]`
     
+
+예시:
 
 ```json
 [
@@ -349,32 +320,15 @@ curl -X POST /api/v1/projects/invites/550e8400-e29b-41d4-a716-446655440000 \
 ]
 ```
 
-- **404**: projectId not found → `ErrorResponse`
-    
-
-### cURL
-
-```bash
-curl -X GET /api/v1/projects/1/participants
-```
-
 ---
 
-# Meetings
+## 2.7 채널(회의) 생성
 
-> 컨트롤러 Prefix: `/api/v1/rooms`
-
-## 1) 회의실(Session) 생성
-
-- **POST** `/api/v1/rooms/{id}/sessions`
+- **POST** `/api/v1/projects/{projectId}/add-channel`
     
-- Auth: **필요**
+- **Auth**: ✅ 필요
     
-- Path Param:
-    
-    - `id`: long (**MeetingService 기준 projectId**)
-        
-- Body: `CreateMeetingRequest`
+- **Body**: `CreateMeetingRequest`
     
 
 ### Request Body
@@ -386,68 +340,165 @@ curl -X GET /api/v1/projects/1/participants
 }
 ```
 
-- `mode`: `MeetingMode` enum (`CHAT`, `VOICE`)
+### Response
+
+- **200**: `result.getValue()` 반환
     
 
-### Response (중요)
+⚠️ **주의(코드 그대로 반영):**  
+`Result<Long>.getValue()`는 `Optional<Long>`인데, 컨트롤러가 Optional을 그대로 반환하고 있어요.  
+환경에 따라 `123`으로 내려올 수도, Optional 구조로 내려올 수도 있음.
 
-- **항상 200**
-    
-- Body는 `Result<Long>`
-    
-
-성공 예시:
+문서상 기대 값(의도):
 
 ```json
-{
-  "value": 123,
-  "success": true,
-  "errors": []
-}
+123
 ```
 
-실패 예시(서비스 주석 기준):
+### Error
+
+- 실패 시 `ErrorResponse` + 해당 HTTP Status
+    
+
+---
+
+## 2.8 프로젝트 채널(회의) 목록 조회
+
+- **GET** `/api/v1/projects/{projectId}/channels`
+    
+- **Auth**: ✅ 필요 _(SecurityConfig 기준)_
+    
+
+### Query Params
+
+- `status` (optional): `MeetingStatus` = `SCHEDULED | RUNNING | ENDED`
+    
+- `cursor` (optional처럼 보이지만 실제는 primitive long)
+    
+    - **주의:** `long cursor`라서 파라미터 생략 시 `0`이 들어갑니다.
+        
+- Pageable (Spring)
+    
+    - 기본 size: 20 (`@PageableDefault(size=20)`)
+        
+    - 일반적으로 `page`, `size`, `sort` 사용 가능  
+        예: `?page=0&size=20&sort=createdAt,desc`
+        
+
+### Response
+
+- **200**: `MeetingResponse[]`
+    
+
+예시(필드 구조):
 
 ```json
-{
-  "value": null,
-  "success": false,
-  "errors": [
-    { "code": 403, "message": "forbidden" }
-  ]
-}
-```
-
-> MeetingService 주석에 명시된 실패 케이스:
-
-- 404: projectId 없음
-    
-- 403: 프로젝트 멤버가 아님
-    
-- 400: title 누락 또는 50자 초과
-    
-- 500: 저장 중 런타임 예외
-    
-
-### cURL
-
-```bash
-curl -X POST /api/v1/rooms/1/sessions \
-  -H "Content-Type: application/json" \
-  -H "Cookie: JSESSIONID=<session-id>" \
-  -d '{"title":"데일리","mode":"VOICE"}'
+[
+  {
+    "id": 100,
+    "project": { "id": 1, "name": "didit", "ownerId": 10, "repoId": 123456, "repoFullName": "org/repo", "thumbnailUrl": null, "createdAt": "2026-01-22T10:00:00", "updatedAt": "2026-01-22T10:10:00" },
+    "createdBy": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-22T10:00:00", "lastLoginAt": "2026-01-22T10:05:00" },
+    "sessionId": "OV_SESSION_abc",
+    "title": "회의 제목",
+    "status": "RUNNING",
+    "mode": "VOICE",
+    "startedAt": "2026-01-22T11:00:00",
+    "endedAt": null,
+    "createdAt": "2026-01-22T10:59:00",
+    "updatedAt": "2026-01-22T11:01:00"
+  }
+]
 ```
 
 ---
 
-# 데이터 모델 (DTO)
+# 3) Channels API (`/api/v1/channels`)
+
+> MeetingController 기준 base path는 `/api/v1/channels/` 입니다.  
+> 문서에서는 일반적으로 `/api/v1/channels/{channelId}` 형태로 표기.
+
+## 3.1 채널(회의) 단건 조회
+
+- **GET** `/api/v1/channels/{channelId}`
+    
+- **Auth**: ✅ 필요
+    
+- 내부에서:
+    
+    - `_meetingService.FindMeetingById(channelId)`
+        
+    - `_projectService.FindProjectUser(userId, projectId)` 로 멤버 검증
+        
+
+### Response
+
+- **200**: `MeetingResponse`
+    
+
+---
+
+## 3.2 채널(회의) 수정
+
+- **PATCH** `/api/v1/channels/{channelId}`
+    
+- **Auth**: ✅ 필요
+    
+- **Query Params** (모두 optional)
+    
+    - `title`: string
+        
+    - `start`: `LocalDateTime` (ISO-8601 권장: `2026-01-22T11:00:00`)
+        
+    - `due`: `LocalDateTime`
+        
+
+> null이면 기존 값 유지(컨트롤러에서 기존 엔티티 값으로 대체)
+
+### Response
+
+- **200** (Body 없음)
+    
+
+### Error
+
+- 실패 시 `ErrorResponse` + HTTP status
+    
+    - (회의 없음 / 멤버 아님 / 업데이트 실패 등)
+        
+
+---
+
+## 3.3 채널(회의) 삭제
+
+- **DELETE** `/api/v1/channels/{channelId}`
+    
+- **Auth**: ✅ 필요
+    
+- 내부에서:
+    
+    - 회의 조회 → 프로젝트 멤버 확인 → 삭제 수행
+        
+
+### Response
+
+- **200** (Body 없음)
+    
+
+### Error
+
+- 실패 시 `ErrorResponse` + HTTP status
+    
+
+---
+
+# 4) 데이터 모델 (업로드 파일 기준)
 
 ## AddProjectRequest
 
 ```json
 {
-  "projectName": "string (max 64)",
-  "githubUrl": "string (url)"
+  "projectName": "string (max 64, not null)",
+  "githubUrl": "string (url, not null)"
 }
 ```
 
@@ -456,7 +507,7 @@ curl -X POST /api/v1/rooms/1/sessions \
 ```json
 {
   "projectId": 1,
-  "expireDate": "date-time | null"
+  "expireDate": "2026-02-01T00:00:00 | null"
 }
 ```
 
@@ -469,14 +520,14 @@ curl -X POST /api/v1/rooms/1/sessions \
 }
 ```
 
-## FindProjectResponse
+## ProjectResponse
 
 ```json
 {
   "id": 1,
   "name": "string",
   "ownerId": 10,
-  "repoId": 123,
+  "repoId": 123456,
   "repoFullName": "org/repo",
   "thumbnailUrl": "string | null",
   "createdAt": "date-time",
@@ -498,63 +549,48 @@ curl -X POST /api/v1/rooms/1/sessions \
 }
 ```
 
-## ErrorResponse
+## MeetingResponse
 
 ```json
 {
-  "statusCode": "HTTP_STATUS_NAME",
-  "message": "string"
-}
-```
-
-## Result
-
-```json
-{
-  "value": "T | null",
-  "success": true,
-  "errors": ["ResultError[]"]
+  "id": 100,
+  "project": "ProjectResponse",
+  "createdBy": "UserResponse",
+  "sessionId": "string",
+  "title": "string | null",
+  "status": "SCHEDULED | RUNNING | ENDED",
+  "mode": "CHAT | VOICE",
+  "startedAt": "date-time | null",
+  "endedAt": "date-time | null",
+  "createdAt": "date-time",
+  "updatedAt": "date-time"
 }
 ```
 
 ---
 
-# Enums
+# 5) Enums
 
-## MeetingMode
-
-- `CHAT`
+- `MeetingMode`: `CHAT`, `VOICE`
     
-- `VOICE`
+- `MeetingStatus`: `SCHEDULED`, `RUNNING`, `ENDED`
     
-
-## MeetingStatus
-
-- `SCHEDULED`
+- `ProjectUserRole`: `ADMIN`, `MEMBER`
     
-- `RUNNING`
-    
-- `ENDED`
-    
-
-## ProjectUserRole
-
-- `ADMIN`
-    
-- `MEMBER`
-    
-
-## ProjectUserStatus
-
-- `PENDING`
-    
-- `ACTIVE`
+- `ProjectUserStatus`: `PENDING`, `ACTIVE`
     
 
 ---
 
-원하면 이 마크다운을 **MkDocs Material** 네비에 바로 붙이기 좋게:
+## (권장) 코드-문서 정합성 이슈 2개 (현재 코드 그대로 관찰된 부분)
 
-- `docs/API/api.md` 형태로 파일 구조 맞추고
+1. `ResponseEntity.ok(result.getValue())` 때문에 **Optional이 응답으로 나갈 수 있음**
     
-- 각 엔드포인트를 “표 형태(요청/응답/에러코드)”로 더 깔끔하게 정리한 버전도 만들어줄게.
+    - `AddInvite`, `createMeeting`에서 발생
+        
+    - 보통은 `result.getOrThrow()` 또는 `result.getValue().get()` 형태로 값만 내려주는 게 문서/클라이언트에 안전함
+        
+2. `cursor`가 `@RequestParam(required=false) long cursor`라서 **생략해도 0이 들어감**
+    
+    - truly optional이면 `Long cursor`로 변경이 안전
+        
