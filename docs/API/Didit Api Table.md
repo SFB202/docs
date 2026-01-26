@@ -1,129 +1,58 @@
+# Didit Api V3 Table
+## 1) 기본 정보 / 규칙
 
-## 공통
-
-### 인증 방식
-
-- **Spring Security 세션 기반** (`JSESSIONID` 쿠키)
-    
-- `SecurityConfig` 기준 PermitAll:
-    
-    - `/`, `/api/v1/auth/login`, `/api/v1/auth/logout`, `/login/**`, `/oauth2/**`
-        
-- 그 외 요청은 기본적으로 **인증 필요**
-    
-
-### 공통 에러 응답 (ErrorResponse)
-
-- 실패 시 서비스 `Result`의 에러에서 `ErrorResponse`를 꺼내 그대로 반환
-    
-- JSON (Jackson 기준) 예시:
-    
-
-```json
-{
-  "statusCode": "NOT_FOUND",
-  "message": "..."
-}
-```
-
-### Result 래퍼 응답
-
-- 일부 API는 `Result<T>` 자체를 반환함 (예: `/api/v1/user/me`)
-    
-
-```json
-{
-  "success": true,
-  "value": { "...": "..." },
-  "errors": []
-}
-```
+|항목|내용|
+|---|---|
+|Base path|`/api/v1`|
+|Port|`8080`|
+|Auth|OAuth2(GitHub) + Session Cookie(`JSESSIONID`)|
+|Public(인증 예외)|`/`, `/api/v1/auth/login`, `/api/v1/auth/logout`, `/login/**`, `/oauth2/**`|
+|Body|JSON (별도 표기 없으면)|
+|Timestamp|ISO-8601 `LocalDateTime``2026-01-26T14:30:00`|
+|Enums|`MeetingMode: CHAT/VOICE``MeetingStatus: SCHEDULED/RUNNING/ENDED``IssueStatus: OPEN/CLOSED``IssuePriority: HIGH/MEDIUM/LOW`|
 
 ---
 
-## 1) Auth / User
+## 2) 공통 에러 응답
 
-|기능|Method|Path|Auth|Request|Response(200)|비고|
-|---|--:|---|---|---|---|---|
-|GitHub OAuth 로그인 시작|GET|`/api/v1/auth/login`|X|-|Redirect|`/oauth2/authorization/github`로 리다이렉트|
-|로그아웃|POST|`/api/v1/auth/logout`|X|-|Redirect/200|세션 invalidate + `JSESSIONID` 삭제 + `/`로 리다이렉트 설정|
-|내 세션 확인(테스트)|GET|`/api/v1/user/me`|O|-|`Result<Map<String,Object>>`|user null이면 401 fail throw|
+|타입|HTTP Status|Body|
+|---|---|---|
+|ErrorResponse|상태코드에 맞게 설정|`{"statusCode":"NOT_FOUND","message":"..."}`|
 
 ---
 
-## 2) Projects
+## 3) Response 스키마 요약
 
-### Request DTO
-
-- **AddProjectRequest**
-    
-    - `projectName` (string, not null, max 64)
-        
-    - `githubUrl` (string, not null, URL)
-        
-- **AddProjectInviteRequest**
-    
-    - `projectId` (long, not null)
-        
-    - `expireDate` (LocalDateTime, optional) — null이면 `now + 1000y`로 처리
-        
-- **CreateMeetingRequest**
-    
-    - `title` (string, not null, max 50)
-        
-    - `mode` (MeetingMode, not null) : `CHAT | VOICE`
-        
-
-### Response DTO
-
-- **ProjectResponse**
-    
-    - `id, name, ownerId, repoId, repoFullName, thumbnailUrl, createdAt, updatedAt`
-        
-
-|기능|Method|Path|Auth|Request|Response(200)|비고|
-|---|--:|---|---|---|---|---|
-|내 프로젝트 목록 조회|GET|`/api/v1/projects`|O|-|`List<ProjectResponse>`|`ProjectService.findProjectsByUserId`|
-|프로젝트 생성|POST|`/api/v1/projects`|O|`AddProjectRequest` (JSON)|Empty Body|성공 시 `200 OK`만 반환|
-|프로젝트 참여자 목록|GET|`/api/v1/projects/{projectId}/participants`|X|-|`List<UserResponse>`|코드상 인증 체크 없음(열려있음)|
+|스키마|포함(요약)|
+|---|---|
+|ProjectResponse|`id, name, ownerId, repoId, repoFullName, thumbnailUrl``createdAt, updatedAt`|
+|UserResponse|`id, githubId, githubLogin, name, avatarUrl``createdAt, lastLoginAt`|
+|MeetingResponse|`id, project(ProjectResponse), createdBy(UserResponse)``sessionId, title, status, mode``startedAt, endedAt, createdAt, updatedAt`|
+|IssueResponse|`id, project(ProjectResponse), githubIssueId, issueNo``title, body, status, priority``author(UserResponse), createdAt, updatedAt, closedAt``assignees[]`|
+|ProjectRecentResponse|`id, user(UserResponse), project(ProjectResponse)``lastViewedAt`|
 
 ---
 
-## 3) Invites (프로젝트 초대)
+## 4) Endpoints (MkDocs 최적화 표)
 
-|기능|Method|Path|Auth|Request|Response(200)|비고|
-|---|--:|---|---|---|---|---|
-|초대코드 생성|POST|`/api/v1/projects/invites`|O|`AddProjectInviteRequest` (JSON)|`UUID`|`expireDate` 없으면 +1000년|
-|초대코드로 프로젝트 조회|GET|`/api/v1/projects/invites/{inviteCode}`|X|-|`ProjectResponse`|`inviteCode` UUID 파싱 실패 시 `400 BadRequest`(바디 없음)|
-|초대코드로 프로젝트 참여|POST|`/api/v1/projects/invites/{inviteCode}`|O|-|Empty Body|`inviteCode` UUID 파싱 실패 시 `400 BadRequest`|
+> 표 폭을 줄이기 위해 **Request/Query/Response는 요약**했고, 긴 내용은 `<br>`로 줄바꿈했어.
 
----
-
-## 4) Channels (Meeting) 단건 조작
-
-> 컨트롤러 경로: `@RequestMapping("/api/v1/channels/")`  
-> 아래 표에서는 일반적인 형태로 `/api/v1/channels/{channelId}`로 표기
-
-### Response DTO
-
-- **MeetingResponse**
-    
-    - `id, project(ProjectResponse), createdBy(UserResponse), sessionId, title, status, mode, startedAt, endedAt, createdAt, updatedAt`
-        
-
-|기능|Method|Path|Auth|Request|Response(200)|비고|
-|---|--:|---|---|---|---|---|
-|채널(회의) 단건 조회|GET|`/api/v1/channels/{channelId}`|O|-|`MeetingResponse`|프로젝트 멤버 여부 확인(`FindProjectUser`)|
-|채널(회의) 수정|PATCH|`/api/v1/channels/{channelId}`|O|QueryParam: `title?`, `start?`, `due?`|Empty Body|null이면 기존 값 유지. 날짜는 `LocalDateTime`(ISO-8601) 기대|
-|채널(회의) 삭제|DELETE|`/api/v1/channels/{channelId}`|O|-|Empty Body|프로젝트 멤버 여부 확인 후 삭제|
-
----
-
-## 5) Project 하위 채널(회의) 생성/목록
-
-|기능|Method|Path|Auth|Request|Response(200)|비고|
-|---|--:|---|---|---|---|---|
-|채널(회의) 생성|POST|`/api/v1/projects/{projectId}/add-channel`|O|`CreateMeetingRequest` (JSON)|`Long`|생성된 meeting PK 반환|
-|채널(회의) 목록 조회|GET|`/api/v1/projects/{projectId}/channels`|X|Query: `status?`, `cursor?`, Pageable|`List<MeetingResponse>`|`@PageableDefault(size=20)` 사용. `cursor`는 서비스는 `long`이라 null이면 NPE 가능(실사용시 0 권장)|
-
----
+|영역|Method|Path|설명|Request / Query|Success|Notes / Errors|
+|---|---|---|---|---|---|---|
+|Auth|GET|`/auth/login`|GitHub OAuth로 리다이렉트|-|`302``Location: /oauth2/authorization/github`||
+|Auth|POST|`/auth/logout`|로그아웃(세션 무효화 + 쿠키 삭제)|-|`302` → `/`|(현재 설정)|
+|User|GET|`/user/me`|현재 인증 사용자 OAuth2 속성 반환|-|`200``Result<{id,login}>`|`{"value":...,"success":true,"errors":[]}`|
+|Projects|GET|`/projects`|내 프로젝트 목록|-|`200``ProjectResponse[]`||
+|Projects|POST|`/projects`|프로젝트 생성 + 생성자 ADMIN|Body: `{projectName, githubUrl}`|`200` (빈 바디)|`projectName<=64``githubUrl` URL 검증|
+|Projects|GET|`/projects/{projectId}`|프로젝트 상세 + 최근조회 업데이트|-|`200``ProjectResponse`||
+|Projects|GET|`/projects/recents`|최근 조회 최대 4개|-|`200``ProjectRecentResponse[]`||
+|Projects|GET|`/projects/{projectId}/participants`|참여자 목록|-|`200``UserResponse[]`||
+|Invites|POST|`/projects/invites`|초대코드 생성(ADMIN)|Body: `{projectId, expireDate?}`|`200``"uuid-string"`|`expireDate` 생략 시 먼 미래로 설정|
+|Invites|GET|`/projects/invites/{inviteCode}`|초대코드로 프로젝트 조회|Path: `{inviteCode}`|`200``ProjectResponse`|UUID 아니면 `400`|
+|Invites|POST|`/projects/invites/{inviteCode}`|초대코드로 참여|Path: `{inviteCode}`|`200` (빈 바디)|UUID 아니면 `400`|
+|Meetings|POST|`/projects/{projectId}/add-channel`|회의(채널) 생성|Body: `{title, mode}`|`200``meetingId(number)`||
+|Meetings|GET|`/projects/{projectId}/channels`|회의(채널) 목록|Query:`status?` `cursor?``page/size/sort`|`200``MeetingResponse[]`|`id DESC``cursor` 첫 페이지 `0``size` 기본 `20`|
+|Meetings|GET|`/channels/{channelId}`|회의 상세|-|`200``MeetingResponse`||
+|Meetings|PATCH|`/channels/{channelId}`|제목/시간 수정|Query(옵션):`title?` `start?` `due?`|`200` (빈 바디)||
+|Meetings|DELETE|`/channels/{channelId}`|회의 삭제|-|`200` (빈 바디)||
+|Issues|GET|`/projects/{projectId}/issues/active`|활성(OPEN) 이슈 최대 5개|-|`200``IssueResponse[]`|`updatedAt DESC`|
