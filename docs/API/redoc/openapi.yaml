@@ -1,0 +1,815 @@
+openapi: 3.0.3
+info:
+  title: Didit Server API
+  version: "v1"
+  description: |
+    Base path: /api/v1
+    Session auth via JSESSIONID cookie (GitHub OAuth2).
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development
+  - url: https://api.did-it.xyz/api/vi
+    description: deployed server
+security:
+  - cookieAuth: []
+tags:
+  - name: Auth
+  - name: Projects
+  - name: Invites
+  - name: Meetings
+  - name: Chats
+  - name: SSE
+  - name: Issues
+
+paths:
+  /auth/login:
+    get:
+      tags: [Auth]
+      summary: Redirect to GitHub OAuth login
+      security: []
+      responses:
+        "302":
+          description: Redirect to /oauth2/authorization/github
+          headers:
+            Location:
+              description: Redirect target
+              schema:
+                type: string
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (invalidate session)
+      security: []
+      responses:
+        "302":
+          description: Redirect to /
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /projects:
+    get:
+      tags: [Projects]
+      summary: List projects for current user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectResponse"
+    post:
+      tags: [Projects]
+      summary: Create a project and register creator as ADMIN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProjectRequest"
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /projects/recents:
+    get:
+      tags: [Projects]
+      summary: Get recent projects (max 4)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectRecentResponse"
+
+  /projects/{projectId}:
+    get:
+      tags: [Projects]
+      summary: Get project details (also updates recent view)
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+
+  /projects/{projectId}/participants:
+    get:
+      tags: [Projects]
+      summary: Get project participants
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+
+  /projects/invites:
+    post:
+      tags: [Invites]
+      summary: Create an invite code for a project (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProjectInviteRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /projects/invites/{inviteCode}:
+    get:
+      tags: [Invites]
+      summary: Get a project by invite code
+      parameters:
+        - $ref: "#/components/parameters/inviteCode"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    post:
+      tags: [Invites]
+      summary: Join a project using an invite code
+      parameters:
+        - $ref: "#/components/parameters/inviteCode"
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /projects/{projectId}/add-channel:
+    post:
+      tags: [Meetings]
+      summary: Create a meeting (channel) in the project
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMeetingRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+
+  /projects/{projectId}/book-channel:
+    post:
+      tags: [Meetings]
+      summary: Reserve a meeting (channel) in the project
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookMeetingRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /projects/{projectId}/channels:
+    get:
+      tags: [Meetings]
+      summary: List meetings (channels) in a project
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/meetingStatus"
+        - $ref: "#/components/parameters/cursor"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/sort"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingResponse"
+
+  /projects/{projectId}/channels/date:
+    get:
+      tags: [Meetings]
+      summary: List meetings in a project within a time range
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/startDateTime"
+        - $ref: "#/components/parameters/endDateTime"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingResponse"
+
+  /channels/{channelId}:
+    get:
+      tags: [Meetings]
+      summary: Get meeting details
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingResponse"
+    patch:
+      tags: [Meetings]
+      summary: Update meeting title and/or time range
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 50
+        - name: start
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: due
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags: [Meetings]
+      summary: Delete a meeting
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: OK
+
+  /channels/{channelId}/webrtc:
+    post:
+      tags: [Meetings]
+      summary: Join a VOICE meeting (create media connection)
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        "409":
+          $ref: "#/components/responses/Conflict"
+    delete:
+      tags: [Meetings]
+      summary: Leave a VOICE meeting (close media connection)
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: OK
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /channels/{channelId}/webrtc/users:
+    get:
+      tags: [Meetings]
+      summary: List users connected to a VOICE meeting
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /channels/{channelId}/chats:
+    post:
+      tags: [Chats]
+      summary: Send a chat message to a channel
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageRequest"
+      responses:
+        "200":
+          description: OK
+    get:
+      tags: [Chats]
+      summary: List chat messages in a channel
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/lastId"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/sort"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatResponse"
+
+  /channels/chats/{chatId}:
+    patch:
+      tags: [Chats]
+      summary: Update a chat message (author only)
+      parameters:
+        - $ref: "#/components/parameters/chatId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChatMessage"
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags: [Chats]
+      summary: Delete a chat message (author only)
+      parameters:
+        - $ref: "#/components/parameters/chatId"
+      responses:
+        "200":
+          description: OK
+
+  /channels/{channelId}/stream:
+    get:
+      tags: [SSE]
+      summary: Subscribe to real-time chat events (SSE)
+      parameters:
+        - $ref: "#/components/parameters/channelId"
+      responses:
+        "200":
+          description: text/event-stream (message, chat_update, chat_delete, ping)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /projects/{projectId}/issues/active:
+    get:
+      tags: [Issues]
+      summary: Get active (OPEN) issues in a project (max 5)
+      parameters:
+        - $ref: "#/components/parameters/projectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+
+  parameters:
+    projectId:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    channelId:
+      name: channelId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    chatId:
+      name: chatId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    inviteCode:
+      name: inviteCode
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    meetingStatus:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: "#/components/schemas/MeetingStatus"
+    cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+        description: last item id from previous page (use 0 for first page)
+    lastId:
+      name: lastId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    size:
+      name: size
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 20
+    sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        description: Spring sort, e.g. "createdAt,desc"
+    startDateTime:
+      name: start
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+    endDateTime:
+      name: end
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad Request (body may be empty)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Unauthorized (body may be empty)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Forbidden (body may be empty)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: Conflict (body may be empty)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    ErrorResponse:
+      type: object
+      description: "Error body (field casing may vary by serialization config)."
+      properties:
+        statusCode:
+          type: string
+        message:
+          type: string
+      example:
+        statusCode: NOT_FOUND
+        message: "..."
+
+    MeetingMode:
+      type: string
+      enum: [CHAT, VOICE]
+
+    MeetingStatus:
+      type: string
+      enum: [SCHEDULED, RUNNING, ENDED]
+
+    IssueStatus:
+      type: string
+      enum: [OPEN, CLOSED]
+
+    IssuePriority:
+      type: string
+      enum: [HIGH, MEDIUM, LOW]
+
+    MessageType:
+      type: string
+      enum: [TEXT, SYSTEM]
+
+    AddProjectRequest:
+      type: object
+      required: [projectName, githubUrl]
+      properties:
+        projectName:
+          type: string
+          maxLength: 64
+        githubUrl:
+          type: string
+          format: uri
+
+    AddProjectInviteRequest:
+      type: object
+      required: [projectId]
+      properties:
+        projectId:
+          type: integer
+          format: int64
+        expireDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateMeetingRequest:
+      type: object
+      required: [title, mode]
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        mode:
+          $ref: "#/components/schemas/MeetingMode"
+
+    BookMeetingRequest:
+      type: object
+      required: [title, start, end]
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+
+    SendMessageRequest:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+
+    UpdateChatMessage:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        githubId:
+          type: integer
+          format: int64
+        githubLogin:
+          type: string
+        name:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          format: uri
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+        repoId:
+          type: integer
+          format: int64
+        repoFullName:
+          type: string
+        thumbnailUrl:
+          type: string
+          format: uri
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    MeetingResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        createdBy:
+          $ref: "#/components/schemas/UserResponse"
+        sessionId:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/MeetingStatus"
+        mode:
+          $ref: "#/components/schemas/MeetingMode"
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    IssueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        githubIssueId:
+          type: integer
+          format: int64
+        issueNo:
+          type: integer
+        title:
+          type: string
+        body:
+          type: string
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        priority:
+          $ref: "#/components/schemas/IssuePriority"
+        author:
+          $ref: "#/components/schemas/UserResponse"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+          nullable: true
+        assignees:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+
+    ProjectRecentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: "#/components/schemas/UserResponse"
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        lastViewedAt:
+          type: string
+          format: date-time
+
+    ChatResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        messageType:
+          $ref: "#/components/schemas/MessageType"
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        editedAt:
+          type: string
+          format: date-time
+          nullable: true
