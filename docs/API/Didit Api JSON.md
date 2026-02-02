@@ -1,11 +1,11 @@
-# Didit API V2026-01-26 JSON
-## 0) 공통
+# Didit Api JSON (2026 - 02 - 02)
 
-### Timestamp 형식
+Base path: `/api/v1` (default port: `8080`)  
+Auth: Session Cookie `JSESSIONID` (GitHub OAuth2)
 
-```json
-"2026-01-26T14:30:00"
-```
+---
+
+## 공통
 
 ### ErrorResponse (대부분 공통)
 
@@ -16,20 +16,9 @@
 }
 ```
 
-### Enums
-
-```json
-{
-  "MeetingMode": ["CHAT", "VOICE"],
-  "MeetingStatus": ["SCHEDULED", "RUNNING", "ENDED"],
-  "IssueStatus": ["OPEN", "CLOSED"],
-  "IssuePriority": ["HIGH", "MEDIUM", "LOW"]
-}
-```
-
 ---
 
-## 1) 응답 스키마(JSON)
+## Schemas (Response JSON)
 
 ### ProjectResponse
 
@@ -109,84 +98,81 @@
 }
 ```
 
----
-
-## 2) 엔드포인트별 JSON 정리
-
-> 형식: **Request JSON → Response JSON (성공) → Error JSON (있으면)**
-
----
-
-### Auth
-
-#### `GET /api/v1/auth/login`
-
-- Request: 없음
-    
-- Response: (리다이렉트)
-    
+### ChatResponse
 
 ```json
 {
-  "status": 302,
-  "headers": { "Location": "/oauth2/authorization/github" }
-}
-```
-
-#### `POST /api/v1/auth/logout`
-
-- Request: 없음
-    
-- Response: (리다이렉트)
-    
-
-```json
-{
-  "status": 302,
-  "headers": { "Location": "/" }
+  "id": 1000,
+  "userId": 10,
+  "messageType": "TEXT",
+  "message": "Hello",
+  "createdAt": "2026-01-26T14:30:00",
+  "editedAt": null
 }
 ```
 
 ---
 
-### User
+# Endpoints — Request / Response JSON
 
-#### `GET /api/v1/user/me`
+## Auth
 
-- Request: 없음
+### GET `/auth/login`
+
+- Request: (none)
     
-- Response:
+- Response: `302` redirect (JSON 없음)
     
+
+### POST `/auth/logout`
+
+- Request: (none)
+    
+- Response: `302` redirect (JSON 없음)
+    
+
+### GET `/auth/me`
+
+**Response 200**
 
 ```json
 {
-  "value": { "id": 999999, "login": "octocat" },
-  "success": true,
-  "errors": []
+  "id": 10,
+  "githubId": 999999,
+  "githubLogin": "octocat",
+  "name": "Octo Cat",
+  "avatarUrl": "https://...",
+  "createdAt": "2026-01-26T14:30:00",
+  "lastLoginAt": "2026-01-26T14:30:00"
 }
 ```
 
 ---
 
-### Projects
+## Projects
 
-#### `GET /api/v1/projects`
+### GET `/projects`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 [
-  { "id": 1, "name": "my-project", "ownerId": 10, "repoId": 123456, "repoFullName": "org/repo", "thumbnailUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "updatedAt": "2026-01-26T14:30:00" }
+  {
+    "id": 1,
+    "name": "my-project",
+    "ownerId": 10,
+    "repoId": 123456,
+    "repoFullName": "org/repo",
+    "thumbnailUrl": "https://...",
+    "createdAt": "2026-01-26T14:30:00",
+    "updatedAt": "2026-01-26T14:30:00"
+  }
 ]
 ```
 
-#### `POST /api/v1/projects`
+### POST `/projects`
 
-- Request:
-    
+**Request**
 
 ```json
 {
@@ -195,19 +181,13 @@
 }
 ```
 
-- Response:
-    
+**Response 200** (empty body)
 
-```json
-{}
-```
+---
 
-#### `GET /api/v1/projects/{projectId}`
+### GET `/projects/{projectId}`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 {
@@ -222,45 +202,63 @@
 }
 ```
 
-#### `GET /api/v1/projects/recents`
+### GET `/projects/recents`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 [
   {
     "id": 1,
-    "user": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" },
-    "project": { "id": 1, "name": "my-project", "ownerId": 10, "repoId": 123456, "repoFullName": "org/repo", "thumbnailUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "updatedAt": "2026-01-26T14:30:00" },
+    "user": {
+      "id": 10,
+      "githubId": 999999,
+      "githubLogin": "octocat",
+      "name": "Octo Cat",
+      "avatarUrl": "https://...",
+      "createdAt": "2026-01-26T14:30:00",
+      "lastLoginAt": "2026-01-26T14:30:00"
+    },
+    "project": {
+      "id": 1,
+      "name": "my-project",
+      "ownerId": 10,
+      "repoId": 123456,
+      "repoFullName": "org/repo",
+      "thumbnailUrl": "https://...",
+      "createdAt": "2026-01-26T14:30:00",
+      "updatedAt": "2026-01-26T14:30:00"
+    },
     "lastViewedAt": "2026-01-26T14:30:00"
   }
 ]
 ```
 
-#### `GET /api/v1/projects/{projectId}/participants`
+### GET `/projects/{projectId}/participants`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 [
-  { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" }
+  {
+    "id": 10,
+    "githubId": 999999,
+    "githubLogin": "octocat",
+    "name": "Octo Cat",
+    "avatarUrl": "https://...",
+    "createdAt": "2026-01-26T14:30:00",
+    "lastLoginAt": "2026-01-26T14:30:00"
+  }
 ]
 ```
 
 ---
 
-### Invites
+## Invites
 
-#### `POST /api/v1/projects/invites`
+### POST `/projects/invites`
 
-- Request:
-    
+**Request**
 
 ```json
 {
@@ -269,19 +267,15 @@
 }
 ```
 
-- Response:
-    
+**Response 200**
 
 ```json
 "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 ```
 
-#### `GET /api/v1/projects/invites/{inviteCode}`
+### GET `/projects/invites/{inviteCode}`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 {
@@ -296,45 +290,20 @@
 }
 ```
 
-- Error(예: UUID 아님):
+### POST `/projects/invites/{inviteCode}`
+
+- Request: (none)
     
-
-```json
-{
-  "statusCode": "BAD_REQUEST",
-  "message": "..."
-}
-```
-
-#### `POST /api/v1/projects/invites/{inviteCode}`
-
-- Request: 없음
+- Response 200: (empty body)
     
-- Response:
-    
-
-```json
-{}
-```
-
-- Error(예: UUID 아님):
-    
-
-```json
-{
-  "statusCode": "BAD_REQUEST",
-  "message": "..."
-}
-```
 
 ---
 
-### Meetings (Channels)
+## Meetings (Channels)
 
-#### `POST /api/v1/projects/{projectId}/add-channel`
+### POST `/projects/{projectId}/add-channel`
 
-- Request:
-    
+**Request**
 
 ```json
 {
@@ -343,17 +312,15 @@
 }
 ```
 
-- Response:
-    
+**Response 200**
 
 ```json
 123
 ```
 
-#### `POST /api/v1/projects/{projectId}/book-channel`
+### POST `/projects/{projectId}/book-channel`
 
-- Request:
-    
+**Request**
 
 ```json
 {
@@ -363,19 +330,15 @@
 }
 ```
 
-- Response:
-    
+**Response 200**
 
 ```json
 456
 ```
 
-#### `GET /api/v1/projects/{projectId}/channels`
+### GET `/projects/{projectId}/channels`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 [
@@ -395,25 +358,31 @@
 ]
 ```
 
-#### `GET /api/v1/projects/{projectId}/channels/date`
+### GET `/projects/{projectId}/channels/date`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 [
-  { "id": 100, "project": { "id": 1, "name": "my-project", "ownerId": 10, "repoId": 123456, "repoFullName": "org/repo", "thumbnailUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "updatedAt": "2026-01-26T14:30:00" }, "createdBy": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" }, "sessionId": "uuid-string", "title": "Daily", "status": "SCHEDULED", "mode": "VOICE", "startedAt": "2026-01-26T14:30:00", "endedAt": "2026-01-26T15:00:00", "createdAt": "2026-01-26T14:30:00", "updatedAt": "2026-01-26T14:30:00" }
+  {
+    "id": 100,
+    "project": { "id": 1, "name": "my-project", "ownerId": 10, "repoId": 123456, "repoFullName": "org/repo", "thumbnailUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "updatedAt": "2026-01-26T14:30:00" },
+    "createdBy": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" },
+    "sessionId": "uuid-string",
+    "title": "Daily",
+    "status": "SCHEDULED",
+    "mode": "VOICE",
+    "startedAt": "2026-01-26T14:30:00",
+    "endedAt": "2026-01-26T15:00:00",
+    "createdAt": "2026-01-26T14:30:00",
+    "updatedAt": "2026-01-26T14:30:00"
+  }
 ]
 ```
 
-#### `GET /api/v1/channels/{channelId}`
+### GET `/channels/{channelId}`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200**
 
 ```json
 {
@@ -431,38 +400,145 @@
 }
 ```
 
-#### `PATCH /api/v1/channels/{channelId}`
+### PATCH `/channels/{channelId}`
 
-- Request body: 없음 (Query로 수정)
+**Request** (query params 기반, JSON body 없음)
+
+- 예: `?title=Daily&start=2026-01-26T14:30:00&due=2026-01-26T15:30:00`
     
-- Response:
-    
+
+**Response 200** (empty body)
+
+### DELETE `/channels/{channelId}`
+
+**Response 200** (empty body)
+
+---
+
+### POST `/channels/{channelId}/webrtc`
+
+**Response 200**
 
 ```json
-{}
+"wss-token-or-openvidu-token-string"
 ```
 
-#### `DELETE /api/v1/channels/{channelId}`
+### DELETE `/channels/{channelId}/webrtc`
 
-- Request: 없음
-    
-- Response:
-    
+**Response 200** (empty body)
+
+### GET `/channels/{channelId}/webrtc/users`
+
+**Response 200**
 
 ```json
-{}
+[
+  {
+    "id": 10,
+    "githubId": 999999,
+    "githubLogin": "octocat",
+    "name": "Octo Cat",
+    "avatarUrl": "https://...",
+    "createdAt": "2026-01-26T14:30:00",
+    "lastLoginAt": "2026-01-26T14:30:00"
+  }
+]
 ```
 
 ---
 
-### Issues
+## Chat Messages
 
-#### `GET /api/v1/projects/{projectId}/issues/active`
+### POST `/channels/{channelId}/chats`
 
-- Request: 없음
-    
-- Response:
-    
+**Request**
+
+```json
+{
+  "content": "Hello"
+}
+```
+
+**Response 200** (empty body)
+
+### GET `/channels/{channelId}/chats`
+
+**Response 200**
+
+```json
+[
+  {
+    "id": 1000,
+    "userId": 10,
+    "messageType": "TEXT",
+    "message": "Hello",
+    "createdAt": "2026-01-26T14:30:00",
+    "editedAt": null
+  }
+]
+```
+
+### PATCH `/channels/chats/{chatId}`
+
+**Request**
+
+```json
+{
+  "content": "Edited message"
+}
+```
+
+**Response 200** (empty body)
+
+### DELETE `/channels/chats/{chatId}`
+
+**Response 200** (empty body)
+
+---
+
+## SSE
+
+### GET `/channels/{channelId}/stream`
+
+**Response 200** (`text/event-stream`)
+
+#### `message` event data
+
+```json
+{
+  "channelId": 1,
+  "senderId": 10,
+  "content": "Hello",
+  "sentAtEpochMs": 1738209000000
+}
+```
+
+#### `chat_update` event data
+
+```json
+{
+  "chatId": 1000,
+  "content": "Edited message",
+  "editedAt": "2026-01-26T14:30:00"
+}
+```
+
+#### `chat_delete` event data
+
+```json
+{
+  "chatId": 1000,
+  "content": "Original message"
+}
+```
+
+---
+
+## Issues
+
+### GET `/projects/{projectId}/issues/active`
+
+**Response 200**
 
 ```json
 [
@@ -483,5 +559,3 @@
   }
 ]
 ```
-
----
