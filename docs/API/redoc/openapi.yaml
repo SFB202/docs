@@ -6,7 +6,7 @@ info:
     Base path: /api/v1
     Session auth via JSESSIONID cookie (GitHub OAuth2).
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: https://madelaine-peritrichate-skye.ngrok-free.dev/api/v1
     description: Local development
   - url: https://api.did-it.xyz/api/v1
     description: deployed server
