@@ -59,7 +59,7 @@ markdown_extensions:
       permalink: true
 
 plugins:
-  - swagger-ui-tag
+  - redoc-tag
   - search
   - literate-nav
   - panzoom:

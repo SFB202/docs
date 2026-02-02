@@ -4,54 +4,59 @@ info:
   version: "v1"
   description: |
     Base path: /api/v1
-    Session auth via JSESSIONID cookie (GitHub OAuth2).
+    JSESSIONID 쿠키 기반 세션 인증 (GitHub OAuth2).
 servers:
-  - url: https://madelaine-peritrichate-skye.ngrok-free.dev/api/v1
-    description: Local development
   - url: https://api.did-it.xyz/api/v1
-    description: deployed server
+    description: 배포 서버
 security:
   - cookieAuth: []
 tags:
   - name: Auth
+    description: 인증
   - name: Projects
+    description: 프로젝트
   - name: Invites
+    description: 초대
   - name: Meetings
+    description: 회의(채널)
   - name: Chats
+    description: 채팅
   - name: SSE
+    description: SSE(실시간 이벤트)
   - name: Issues
+    description: 이슈
 
 paths:
   /auth/login:
     get:
       tags: [Auth]
-      summary: Redirect to GitHub OAuth login
+      summary: GitHub OAuth 로그인으로 리다이렉트
       security: []
       responses:
         "302":
-          description: Redirect to /oauth2/authorization/github
+          description: /oauth2/authorization/github 로 리다이렉트
           headers:
             Location:
-              description: Redirect target
+              description: 리다이렉트 대상
               schema:
                 type: string
 
   /auth/logout:
     post:
       tags: [Auth]
-      summary: Logout (invalidate session)
+      summary: 로그아웃(세션 무효화)
       security: []
       responses:
         "302":
-          description: Redirect to /
+          description: / 로 리다이렉트
 
   /auth/me:
     get:
       tags: [Auth]
-      summary: Get current authenticated user
+      summary: 현재 인증된 사용자 조회
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -62,10 +67,10 @@ paths:
   /projects:
     get:
       tags: [Projects]
-      summary: List projects for current user
+      summary: 현재 사용자의 프로젝트 목록 조회
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -74,7 +79,7 @@ paths:
                   $ref: "#/components/schemas/ProjectResponse"
     post:
       tags: [Projects]
-      summary: Create a project and register creator as ADMIN
+      summary: 프로젝트 생성 및 생성자를 ADMIN으로 등록
       requestBody:
         required: true
         content:
@@ -83,17 +88,17 @@ paths:
               $ref: "#/components/schemas/AddProjectRequest"
       responses:
         "200":
-          description: OK
+          description: 성공
         "400":
           $ref: "#/components/responses/BadRequest"
 
   /projects/recents:
     get:
       tags: [Projects]
-      summary: Get recent projects (max 4)
+      summary: 최근 프로젝트 조회(최대 4개)
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -104,12 +109,12 @@ paths:
   /projects/{projectId}:
     get:
       tags: [Projects]
-      summary: Get project details (also updates recent view)
+      summary: 프로젝트 상세 조회(최근 조회 기록 갱신 포함)
       parameters:
         - $ref: "#/components/parameters/projectId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -118,12 +123,12 @@ paths:
   /projects/{projectId}/participants:
     get:
       tags: [Projects]
-      summary: Get project participants
+      summary: 프로젝트 참여자 목록 조회
       parameters:
         - $ref: "#/components/parameters/projectId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -134,7 +139,7 @@ paths:
   /projects/invites:
     post:
       tags: [Invites]
-      summary: Create an invite code for a project (admin only)
+      summary: 프로젝트 초대 코드 생성(관리자만)
       requestBody:
         required: true
         content:
@@ -143,7 +148,7 @@ paths:
               $ref: "#/components/schemas/AddProjectInviteRequest"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -155,12 +160,12 @@ paths:
   /projects/invites/{inviteCode}:
     get:
       tags: [Invites]
-      summary: Get a project by invite code
+      summary: 초대 코드로 프로젝트 조회
       parameters:
         - $ref: "#/components/parameters/inviteCode"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -169,19 +174,19 @@ paths:
           $ref: "#/components/responses/BadRequest"
     post:
       tags: [Invites]
-      summary: Join a project using an invite code
+      summary: 초대 코드로 프로젝트 참가
       parameters:
         - $ref: "#/components/parameters/inviteCode"
       responses:
         "200":
-          description: OK
+          description: 성공
         "400":
           $ref: "#/components/responses/BadRequest"
 
   /projects/{projectId}/add-channel:
     post:
       tags: [Meetings]
-      summary: Create a meeting (channel) in the project
+      summary: 프로젝트 내 회의(채널) 생성
       parameters:
         - $ref: "#/components/parameters/projectId"
       requestBody:
@@ -192,7 +197,7 @@ paths:
               $ref: "#/components/schemas/CreateMeetingRequest"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -202,7 +207,7 @@ paths:
   /projects/{projectId}/book-channel:
     post:
       tags: [Meetings]
-      summary: Reserve a meeting (channel) in the project
+      summary: 프로젝트 내 회의(채널) 예약
       parameters:
         - $ref: "#/components/parameters/projectId"
       requestBody:
@@ -213,7 +218,7 @@ paths:
               $ref: "#/components/schemas/BookMeetingRequest"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -225,7 +230,7 @@ paths:
   /projects/{projectId}/channels:
     get:
       tags: [Meetings]
-      summary: List meetings (channels) in a project
+      summary: 프로젝트 내 회의(채널) 목록 조회
       parameters:
         - $ref: "#/components/parameters/projectId"
         - $ref: "#/components/parameters/meetingStatus"
@@ -235,7 +240,7 @@ paths:
         - $ref: "#/components/parameters/sort"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -246,14 +251,14 @@ paths:
   /projects/{projectId}/channels/date:
     get:
       tags: [Meetings]
-      summary: List meetings in a project within a time range
+      summary: 프로젝트 내 회의(채널) 목록 조회(시간 범위 필터)
       parameters:
         - $ref: "#/components/parameters/projectId"
         - $ref: "#/components/parameters/startDateTime"
         - $ref: "#/components/parameters/endDateTime"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -264,19 +269,19 @@ paths:
   /channels/{channelId}:
     get:
       tags: [Meetings]
-      summary: Get meeting details
+      summary: 회의(채널) 상세 조회
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MeetingResponse"
     patch:
       tags: [Meetings]
-      summary: Update meeting title and/or time range
+      summary: 회의 제목 및/또는 시간 범위 수정
       parameters:
         - $ref: "#/components/parameters/channelId"
         - name: title
@@ -299,25 +304,25 @@ paths:
             format: date-time
       responses:
         "200":
-          description: OK
+          description: 성공
     delete:
       tags: [Meetings]
-      summary: Delete a meeting
+      summary: 회의(채널) 삭제
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
         "200":
-          description: OK
+          description: 성공
 
   /channels/{channelId}/webrtc:
     post:
       tags: [Meetings]
-      summary: Join a VOICE meeting (create media connection)
+      summary: VOICE 회의 참여(미디어 커넥션 생성)
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -326,24 +331,24 @@ paths:
           $ref: "#/components/responses/Conflict"
     delete:
       tags: [Meetings]
-      summary: Leave a VOICE meeting (close media connection)
+      summary: VOICE 회의 나가기(미디어 커넥션 종료)
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
         "200":
-          description: OK
+          description: 성공
         "409":
           $ref: "#/components/responses/Conflict"
 
   /channels/{channelId}/webrtc/users:
     get:
       tags: [Meetings]
-      summary: List users connected to a VOICE meeting
+      summary: VOICE 회의에 접속 중인 사용자 목록 조회
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -356,7 +361,7 @@ paths:
   /channels/{channelId}/chats:
     post:
       tags: [Chats]
-      summary: Send a chat message to a channel
+      summary: 채널에 채팅 메시지 전송
       parameters:
         - $ref: "#/components/parameters/channelId"
       requestBody:
@@ -367,10 +372,10 @@ paths:
               $ref: "#/components/schemas/SendMessageRequest"
       responses:
         "200":
-          description: OK
+          description: 성공
     get:
       tags: [Chats]
-      summary: List chat messages in a channel
+      summary: 채널의 채팅 메시지 목록 조회
       parameters:
         - $ref: "#/components/parameters/channelId"
         - $ref: "#/components/parameters/lastId"
@@ -379,7 +384,7 @@ paths:
         - $ref: "#/components/parameters/sort"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -390,7 +395,7 @@ paths:
   /channels/chats/{chatId}:
     patch:
       tags: [Chats]
-      summary: Update a chat message (author only)
+      summary: 채팅 메시지 수정(작성자만)
       parameters:
         - $ref: "#/components/parameters/chatId"
       requestBody:
@@ -401,20 +406,20 @@ paths:
               $ref: "#/components/schemas/UpdateChatMessage"
       responses:
         "200":
-          description: OK
+          description: 성공
     delete:
       tags: [Chats]
-      summary: Delete a chat message (author only)
+      summary: 채팅 메시지 삭제(작성자만)
       parameters:
         - $ref: "#/components/parameters/chatId"
       responses:
         "200":
-          description: OK
+          description: 성공
 
   /channels/{channelId}/stream:
     get:
       tags: [SSE]
-      summary: Subscribe to real-time chat events (SSE)
+      summary: 실시간 채팅 이벤트 구독(SSE)
       parameters:
         - $ref: "#/components/parameters/channelId"
       responses:
@@ -430,12 +435,12 @@ paths:
   /projects/{projectId}/issues/active:
     get:
       tags: [Issues]
-      summary: Get active (OPEN) issues in a project (max 5)
+      summary: 프로젝트의 활성(OPEN) 이슈 조회(최대 5개)
       parameters:
         - $ref: "#/components/parameters/projectId"
       responses:
         "200":
-          description: OK
+          description: 성공
           content:
             application/json:
               schema:
@@ -492,7 +497,7 @@ components:
       schema:
         type: integer
         format: int64
-        description: last item id from previous page (use 0 for first page)
+        description: 이전 페이지의 마지막 아이템 id (첫 페이지는 0 사용)
     lastId:
       name: lastId
       in: query
@@ -522,7 +527,7 @@ components:
       required: false
       schema:
         type: string
-        description: Spring sort, e.g. "createdAt,desc"
+        description: Spring 정렬 파라미터 예) "createdAt,desc"
     startDateTime:
       name: start
       in: query
@@ -540,25 +545,25 @@ components:
 
   responses:
     BadRequest:
-      description: Bad Request (body may be empty)
+      description: 잘못된 요청 (body가 비어있을 수 있음)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
     Unauthorized:
-      description: Unauthorized (body may be empty)
+      description: 인증 필요 (body가 비어있을 수 있음)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
     Forbidden:
-      description: Forbidden (body may be empty)
+      description: 권한 없음 (body가 비어있을 수 있음)
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
     Conflict:
-      description: Conflict (body may be empty)
+      description: 충돌(Conflict) (body가 비어있을 수 있음)
       content:
         application/json:
           schema:
@@ -567,7 +572,7 @@ components:
   schemas:
     ErrorResponse:
       type: object
-      description: "Error body (field casing may vary by serialization config)."
+      description: "에러 응답 바디(직렬화 설정에 따라 필드 케이스가 달라질 수 있음)."
       properties:
         statusCode:
           type: string
@@ -580,22 +585,27 @@ components:
     MeetingMode:
       type: string
       enum: [CHAT, VOICE]
+      description: 회의 모드(채팅/음성)
 
     MeetingStatus:
       type: string
       enum: [SCHEDULED, RUNNING, ENDED]
+      description: 회의 상태(예정/진행중/종료)
 
     IssueStatus:
       type: string
       enum: [OPEN, CLOSED]
+      description: 이슈 상태(열림/닫힘)
 
     IssuePriority:
       type: string
       enum: [HIGH, MEDIUM, LOW]
+      description: 이슈 우선순위(높음/중간/낮음)
 
     MessageType:
       type: string
       enum: [TEXT, SYSTEM]
+      description: 메시지 타입(일반 텍스트/시스템)
 
     AddProjectRequest:
       type: object
@@ -604,9 +614,11 @@ components:
         projectName:
           type: string
           maxLength: 64
+          description: 프로젝트 이름
         githubUrl:
           type: string
           format: uri
+          description: GitHub 저장소 URL
 
     AddProjectInviteRequest:
       type: object
@@ -615,10 +627,12 @@ components:
         projectId:
           type: integer
           format: int64
+          description: 프로젝트 ID
         expireDate:
           type: string
           format: date-time
           nullable: true
+          description: 만료 일시(없으면 null)
 
     CreateMeetingRequest:
       type: object
@@ -627,6 +641,7 @@ components:
         title:
           type: string
           maxLength: 50
+          description: 회의 제목
         mode:
           $ref: "#/components/schemas/MeetingMode"
 
@@ -637,12 +652,15 @@ components:
         title:
           type: string
           maxLength: 50
+          description: 회의 제목
         start:
           type: string
           format: date-time
+          description: 시작 일시
         end:
           type: string
           format: date-time
+          description: 종료 일시
 
     SendMessageRequest:
       type: object
@@ -650,6 +668,7 @@ components:
       properties:
         content:
           type: string
+          description: 메시지 내용
 
     UpdateChatMessage:
       type: object
@@ -657,6 +676,7 @@ components:
       properties:
         content:
           type: string
+          description: 수정할 메시지 내용
 
     UserResponse:
       type: object
@@ -664,24 +684,31 @@ components:
         id:
           type: integer
           format: int64
+          description: 사용자 ID
         githubId:
           type: integer
           format: int64
+          description: GitHub 사용자 ID
         githubLogin:
           type: string
+          description: GitHub 로그인(아이디)
         name:
           type: string
           nullable: true
+          description: 사용자 이름(없을 수 있음)
         avatarUrl:
           type: string
           format: uri
           nullable: true
+          description: 아바타 URL(없을 수 있음)
         createdAt:
           type: string
           format: date-time
+          description: 생성 일시
         lastLoginAt:
           type: string
           format: date-time
+          description: 마지막 로그인 일시
 
     ProjectResponse:
       type: object
@@ -689,26 +716,34 @@ components:
         id:
           type: integer
           format: int64
+          description: 프로젝트 ID
         name:
           type: string
+          description: 프로젝트 이름
         ownerId:
           type: integer
           format: int64
+          description: 소유자 사용자 ID
         repoId:
           type: integer
           format: int64
+          description: GitHub 저장소 ID
         repoFullName:
           type: string
+          description: 저장소 전체 이름(owner/repo)
         thumbnailUrl:
           type: string
           format: uri
           nullable: true
+          description: 썸네일 URL(없을 수 있음)
         createdAt:
           type: string
           format: date-time
+          description: 생성 일시
         updatedAt:
           type: string
           format: date-time
+          description: 수정 일시
 
     MeetingResponse:
       type: object
@@ -716,14 +751,17 @@ components:
         id:
           type: integer
           format: int64
+          description: 회의(채널) ID
         project:
           $ref: "#/components/schemas/ProjectResponse"
         createdBy:
           $ref: "#/components/schemas/UserResponse"
         sessionId:
           type: string
+          description: OpenVidu 세션 ID
         title:
           type: string
+          description: 회의 제목
         status:
           $ref: "#/components/schemas/MeetingStatus"
         mode:
@@ -731,15 +769,19 @@ components:
         startedAt:
           type: string
           format: date-time
+          description: 시작 일시
         endedAt:
           type: string
           format: date-time
+          description: 종료 일시
         createdAt:
           type: string
           format: date-time
+          description: 생성 일시
         updatedAt:
           type: string
           format: date-time
+          description: 수정 일시
 
     IssueResponse:
       type: object
@@ -747,17 +789,22 @@ components:
         id:
           type: integer
           format: int64
+          description: 이슈 ID
         project:
           $ref: "#/components/schemas/ProjectResponse"
         githubIssueId:
           type: integer
           format: int64
+          description: GitHub 이슈 ID
         issueNo:
           type: integer
+          description: 이슈 번호(레포 내 번호)
         title:
           type: string
+          description: 이슈 제목
         body:
           type: string
+          description: 이슈 본문
         status:
           $ref: "#/components/schemas/IssueStatus"
         priority:
@@ -767,15 +814,19 @@ components:
         createdAt:
           type: string
           format: date-time
+          description: 생성 일시
         updatedAt:
           type: string
           format: date-time
+          description: 수정 일시
         closedAt:
           type: string
           format: date-time
           nullable: true
+          description: 종료(닫힘) 일시(없을 수 있음)
         assignees:
           type: array
+          description: 담당자 목록
           items:
             $ref: "#/components/schemas/UserResponse"
 
@@ -785,6 +836,7 @@ components:
         id:
           type: integer
           format: int64
+          description: 최근 프로젝트 기록 ID
         user:
           $ref: "#/components/schemas/UserResponse"
         project:
@@ -792,6 +844,7 @@ components:
         lastViewedAt:
           type: string
           format: date-time
+          description: 마지막 조회 일시
 
     ChatResponse:
       type: object
@@ -799,17 +852,22 @@ components:
         id:
           type: integer
           format: int64
+          description: 채팅 ID
         userId:
           type: integer
           format: int64
+          description: 작성자 사용자 ID
         messageType:
           $ref: "#/components/schemas/MessageType"
         message:
           type: string
+          description: 메시지 내용
         createdAt:
           type: string
           format: date-time
+          description: 생성 일시
         editedAt:
           type: string
           format: date-time
           nullable: true
+          description: 수정 일시(없을 수 있음)
