@@ -1,0 +1,3105 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../Didit%20API%20Swagger/" rel="prev"/>
+<link href="../../feed_rss_created.xml" rel="alternate" title="RSS feed" type="application/rss+xml"/>
+<link href="../../feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>Didit Server API (2026 - 02 - 05 저녁) - 개발 문서</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/stylesheets/panzoom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".mermaid", "img", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<body data-md-color-accent="amber" data-md-color-primary="brown" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#didit-server-api-2026-02-05">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="개발 문서" class="md-header__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            개발 문서
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Didit Server API (2026 - 02 - 05 저녁)
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="다크 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="brown" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="다크 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path></svg>
+</label>
+<input aria-label="라이트 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="brown" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="라이트 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EA%B8%B0%ED%9A%8D/">
+          
+  
+  
+  기획
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EC%84%A4%EA%B3%84/">
+          
+  
+  
+  설계
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/">
+          
+  
+  
+  컨벤션
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../Didit%20API%20Swagger/">
+          
+  
+  
+  API
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="개발 문서" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    개발 문서
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    기획
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    기획
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/API%20DOC%20-%20%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    API DOC   기획
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ERD
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ERD
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/ERD/Logical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Logical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    요구사항
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    요구사항
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/Feature%20Request%20Table/">
+<span class="md-ellipsis">
+    
+  
+    Feature Request Table
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%281%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (1차)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%282%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (2차)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    설계
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    설계
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Architecture/">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/MileStone/">
+<span class="md-ellipsis">
+    
+  
+    MileStone
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Physical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Physical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    컨벤션
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    컨벤션
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/Git%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    Git 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/Result%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Result 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/SSE/">
+<span class="md-ellipsis">
+    
+  
+    Spring MVC SSE 아키텍처/컨벤션/사용설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/Spring%20Validation%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%26%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Spring Validation 컨벤션 &amp; 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EB%B0%9C%20%EC%9D%B4%EC%8A%88%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    기능 개발 이슈 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    네이밍 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/%EC%9C%A0%EB%8B%9B%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    유닛 테스트 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    인터페이스 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%BB%A8%EB%B2%A4%EC%85%98/%ED%8C%A8%ED%82%A4%EC%A7%80%20%EA%B5%AC%EC%A1%B0%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    패키지 구조 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Didit%20API%20Swagger/">
+<span class="md-ellipsis">
+    
+  
+    Didit API Swagger (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Didit Server API (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Didit Server API (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication">
+<span class="md-ellipsis">
+      
+        인증 (Authentication)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conventions">
+<span class="md-ellipsis">
+      
+        규칙 (Conventions)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-redis-communication">
+<span class="md-ellipsis">
+      
+        Redis 통신 (Redis Communication)
+      
+    </span>
+</a>
+<nav aria-label="Redis 통신 (Redis Communication)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pubsub-inbound">
+<span class="md-ellipsis">
+      
+        Pub/Sub 토픽 (서버로 “들어오는” 토픽, inbound)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#outbound">
+<span class="md-ellipsis">
+      
+        큐 키 (서버에서 “나가는” 큐, outbound)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_1">
+<span class="md-ellipsis">
+      
+        내부 세션 키
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enum">
+<span class="md-ellipsis">
+      
+        Enum 목록
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        에러 응답
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        스키마 (응답)
+      
+    </span>
+</a>
+<nav aria-label="스키마 (응답)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projectresponse">
+<span class="md-ellipsis">
+      
+        ProjectResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#userresponse">
+<span class="md-ellipsis">
+      
+        UserResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetingresponse">
+<span class="md-ellipsis">
+      
+        MeetingResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetingsummaryresponse">
+<span class="md-ellipsis">
+      
+        MeetingSummaryResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#issueresponse">
+<span class="md-ellipsis">
+      
+        IssueResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projectrecentresponse">
+<span class="md-ellipsis">
+      
+        ProjectRecentResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chatresponse">
+<span class="md-ellipsis">
+      
+        ChatResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#airesponse">
+<span class="md-ellipsis">
+      
+        AiResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#githubreporesponse">
+<span class="md-ellipsis">
+      
+        GithubRepoResponse
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#endpoints">
+<span class="md-ellipsis">
+      
+        엔드포인트 (Endpoints)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#auth">
+<span class="md-ellipsis">
+      
+        Auth
+      
+    </span>
+</a>
+<nav aria-label="Auth" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1authlogin">
+<span class="md-ellipsis">
+      
+        GET /api/v1/auth/login
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1authlogout">
+<span class="md-ellipsis">
+      
+        POST /api/v1/auth/logout
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1authme">
+<span class="md-ellipsis">
+      
+        GET /api/v1/auth/me
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projects">
+<span class="md-ellipsis">
+      
+        Projects
+      
+    </span>
+</a>
+<nav aria-label="Projects" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projects">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projects">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsrecents">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/recents
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidparticipants">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/participants
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidleave">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/leave
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidparticipantsuserid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/participants/{userId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidgithubvalidate">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/github/validate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidowner">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/owner
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidname">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/name
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invites">
+<span class="md-ellipsis">
+      
+        Invites
+      
+    </span>
+</a>
+<nav aria-label="Invites" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsinvites">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/invites
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsinvitesinvitecode">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/invites/{inviteCode}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsinvitesinvitecode">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/invites/{inviteCode}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetings-channels">
+<span class="md-ellipsis">
+      
+        Meetings (Channels)
+      
+    </span>
+</a>
+<nav aria-label="Meetings (Channels)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidadd-channel">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/add-channel
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidbook-channel">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/book-channel
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidchannels">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/channels
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidchannelsdate">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/channels/date
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidwebrtc">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/webrtc
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschannelidwebrtc">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/{channelId}/webrtc
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidwebrtcusers">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/webrtc/users
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidrecordingstart">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/recording/start
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidrecordingstoprecordid">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/recording/stop/{recordId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chat-messages">
+<span class="md-ellipsis">
+      
+        Chat Messages
+      
+    </span>
+</a>
+<nav aria-label="Chat Messages" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidchats">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/chats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidchats">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/chats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1channelschatschatid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/channels/chats/{chatId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschatschatid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/chats/{chatId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sse-server-sent-events">
+<span class="md-ellipsis">
+      
+        SSE (Server-Sent Events)
+      
+    </span>
+</a>
+<nav aria-label="SSE (Server-Sent Events)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidstream">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/stream
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidstream">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/stream
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#issues">
+<span class="md-ellipsis">
+      
+        Issues
+      
+    </span>
+</a>
+<nav aria-label="Issues" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidissuesactive">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/issues/active
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidissues">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/issues
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidissueanalyze">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/issue/analyze
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidissues">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/issues
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidissuesissueid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/issues/{issueId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidissuesissueid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/issues/{issueId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meeting-summaries">
+<span class="md-ellipsis">
+      
+        Meeting Summaries
+      
+    </span>
+</a>
+<nav aria-label="Meeting Summaries" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidsummary">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidsummarysummaryid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/summary/{summaryId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidsummarysummaryid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/summary/{summaryId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhooks">
+<span class="md-ellipsis">
+      
+        Webhooks
+      
+    </span>
+</a>
+<nav aria-label="Webhooks" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1webhooksopenvidu">
+<span class="md-ellipsis">
+      
+        POST /api/v1/webhooks/openvidu
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#authentication">
+<span class="md-ellipsis">
+      
+        인증 (Authentication)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#conventions">
+<span class="md-ellipsis">
+      
+        규칙 (Conventions)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#redis-redis-communication">
+<span class="md-ellipsis">
+      
+        Redis 통신 (Redis Communication)
+      
+    </span>
+</a>
+<nav aria-label="Redis 통신 (Redis Communication)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pubsub-inbound">
+<span class="md-ellipsis">
+      
+        Pub/Sub 토픽 (서버로 “들어오는” 토픽, inbound)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#outbound">
+<span class="md-ellipsis">
+      
+        큐 키 (서버에서 “나가는” 큐, outbound)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_1">
+<span class="md-ellipsis">
+      
+        내부 세션 키
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#enum">
+<span class="md-ellipsis">
+      
+        Enum 목록
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        에러 응답
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        스키마 (응답)
+      
+    </span>
+</a>
+<nav aria-label="스키마 (응답)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projectresponse">
+<span class="md-ellipsis">
+      
+        ProjectResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#userresponse">
+<span class="md-ellipsis">
+      
+        UserResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetingresponse">
+<span class="md-ellipsis">
+      
+        MeetingResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetingsummaryresponse">
+<span class="md-ellipsis">
+      
+        MeetingSummaryResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#issueresponse">
+<span class="md-ellipsis">
+      
+        IssueResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projectrecentresponse">
+<span class="md-ellipsis">
+      
+        ProjectRecentResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chatresponse">
+<span class="md-ellipsis">
+      
+        ChatResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#airesponse">
+<span class="md-ellipsis">
+      
+        AiResponse
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#githubreporesponse">
+<span class="md-ellipsis">
+      
+        GithubRepoResponse
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#endpoints">
+<span class="md-ellipsis">
+      
+        엔드포인트 (Endpoints)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#auth">
+<span class="md-ellipsis">
+      
+        Auth
+      
+    </span>
+</a>
+<nav aria-label="Auth" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1authlogin">
+<span class="md-ellipsis">
+      
+        GET /api/v1/auth/login
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1authlogout">
+<span class="md-ellipsis">
+      
+        POST /api/v1/auth/logout
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1authme">
+<span class="md-ellipsis">
+      
+        GET /api/v1/auth/me
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#projects">
+<span class="md-ellipsis">
+      
+        Projects
+      
+    </span>
+</a>
+<nav aria-label="Projects" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projects">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projects">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsrecents">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/recents
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidparticipants">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/participants
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidleave">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/leave
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidparticipantsuserid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/participants/{userId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidgithubvalidate">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/github/validate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidowner">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/owner
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidname">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/name
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#invites">
+<span class="md-ellipsis">
+      
+        Invites
+      
+    </span>
+</a>
+<nav aria-label="Invites" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsinvites">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/invites
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsinvitesinvitecode">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/invites/{inviteCode}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsinvitesinvitecode">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/invites/{inviteCode}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meetings-channels">
+<span class="md-ellipsis">
+      
+        Meetings (Channels)
+      
+    </span>
+</a>
+<nav aria-label="Meetings (Channels)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidadd-channel">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/add-channel
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidbook-channel">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/book-channel
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidchannels">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/channels
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidchannelsdate">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/channels/date
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschannelid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/{channelId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidwebrtc">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/webrtc
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschannelidwebrtc">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/{channelId}/webrtc
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidwebrtcusers">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/webrtc/users
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidrecordingstart">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/recording/start
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidrecordingstoprecordid">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/recording/stop/{recordId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chat-messages">
+<span class="md-ellipsis">
+      
+        Chat Messages
+      
+    </span>
+</a>
+<nav aria-label="Chat Messages" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1channelschannelidchats">
+<span class="md-ellipsis">
+      
+        POST /api/v1/channels/{channelId}/chats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidchats">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/chats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1channelschatschatid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/channels/chats/{chatId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1channelschatschatid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/channels/chats/{chatId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sse-server-sent-events">
+<span class="md-ellipsis">
+      
+        SSE (Server-Sent Events)
+      
+    </span>
+</a>
+<nav aria-label="SSE (Server-Sent Events)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1channelschannelidstream">
+<span class="md-ellipsis">
+      
+        GET /api/v1/channels/{channelId}/stream
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidstream">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/stream
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#issues">
+<span class="md-ellipsis">
+      
+        Issues
+      
+    </span>
+</a>
+<nav aria-label="Issues" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidissuesactive">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/issues/active
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidissues">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/issues
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidissueanalyze">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/issue/analyze
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1projectsprojectidissues">
+<span class="md-ellipsis">
+      
+        POST /api/v1/projects/{projectId}/issues
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidissuesissueid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/issues/{issueId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidissuesissueid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/issues/{issueId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#meeting-summaries">
+<span class="md-ellipsis">
+      
+        Meeting Summaries
+      
+    </span>
+</a>
+<nav aria-label="Meeting Summaries" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get-apiv1projectsprojectidsummary">
+<span class="md-ellipsis">
+      
+        GET /api/v1/projects/{projectId}/summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#patch-apiv1projectsprojectidsummarysummaryid">
+<span class="md-ellipsis">
+      
+        PATCH /api/v1/projects/{projectId}/summary/{summaryId}
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delete-apiv1projectsprojectidsummarysummaryid">
+<span class="md-ellipsis">
+      
+        DELETE /api/v1/projects/{projectId}/summary/{summaryId}
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webhooks">
+<span class="md-ellipsis">
+      
+        Webhooks
+      
+    </span>
+</a>
+<nav aria-label="Webhooks" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#post-apiv1webhooksopenvidu">
+<span class="md-ellipsis">
+      
+        POST /api/v1/webhooks/openvidu
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="didit-server-api-2026-02-05">Didit Server API (2026 - 02 - 05 저녁)<a class="headerlink" href="#didit-server-api-2026-02-05" title="Permanent link">¶</a></h1>
+<p>Base path: <code>/api/v1</code> (기본 포트: <code>8080</code>)</p>
+<h2 id="authentication">인증 (Authentication)<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h2>
+<p>이 서버는 Spring Security OAuth2(GitHub)를 사용하며, 세션 쿠키(<code>JSESSIONID</code>) 기반으로 인증합니다.</p>
+<ul>
+<li>
+<p><code>GET /api/v1/auth/login</code>: GitHub OAuth 인가 엔드포인트(<code>/oauth2/authorization/github</code>)로 리다이렉트합니다.</p>
+</li>
+<li>
+<p><code>POST /api/v1/auth/logout</code>: 세션을 무효화하고 <code>JSESSIONID</code> 쿠키를 제거합니다.</p>
+</li>
+<li>
+<p><code>GET /api/v1/auth/me</code>: 현재 인증된 사용자(<code>UserResponse</code>)를 반환합니다.</p>
+</li>
+</ul>
+<p>기본적으로 <strong>모든 엔드포인트는 인증이 필요</strong>하며, 아래 경로만 예외로 인증 없이 접근 가능합니다:</p>
+<ul>
+<li>
+<p><code>/</code></p>
+</li>
+<li>
+<p><code>/openapi.yaml</code></p>
+</li>
+<li>
+<p><code>/swagger-ui.html</code></p>
+</li>
+<li>
+<p><code>/swagger-ui/**</code></p>
+</li>
+<li>
+<p><code>/v3/api-docs/swagger-config</code></p>
+</li>
+<li>
+<p><code>/api/v1/auth/login</code></p>
+</li>
+<li>
+<p><code>/api/v1/auth/logout</code></p>
+</li>
+<li>
+<p><code>/login/**</code></p>
+</li>
+<li>
+<p><code>/oauth2/**</code></p>
+</li>
+<li>
+<p><code>/error</code></p>
+</li>
+<li>
+<p><code>/api/v1/webhooks/openvidu</code></p>
+</li>
+</ul>
+<h2 id="conventions">규칙 (Conventions)<a class="headerlink" href="#conventions" title="Permanent link">¶</a></h2>
+<ul>
+<li>
+<p>요청/응답 본문: JSON (별도 표기 없는 한)</p>
+</li>
+<li>
+<p>시간 포맷: ISO-8601 <code>LocalDateTime</code> (예: <code>2026-01-26T14:30:00</code>)</p>
+</li>
+<li>
+<p>페이지네이션: Spring <code>Pageable</code> 파라미터(<code>page</code>, <code>size</code>, <code>sort</code>)</p>
+</li>
+<li>
+<p>커서: 일부 엔드포인트는 이전 페이지의 마지막 항목 id를 <code>lastId</code> 또는 <code>cursor</code>로 받습니다.</p>
+</li>
+</ul>
+<h2 id="redis-redis-communication">Redis 통신 (Redis Communication)<a class="headerlink" href="#redis-redis-communication" title="Permanent link">¶</a></h2>
+<p>이 서비스는 Redis를 비동기 메시징(pub/sub)과 큐(리스트) 용도로 사용합니다. 페이로드는 <strong>JSON 문자열</strong>입니다.</p>
+<h3 id="pubsub-inbound">Pub/Sub 토픽 (서버로 “들어오는” 토픽, inbound)<a class="headerlink" href="#pubsub-inbound" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>issue:priority:result_topic</code></p>
+<ul>
+<li>
+<p>목적: AI 이슈 우선순위 분석 결과</p>
+</li>
+<li>
+<p>페이로드:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueId"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HIGH"</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>동작: 서버는 요청한 사용자 세션에만 <code>ai_analysis_result</code> SSE를 전송합니다.</li>
+</ul>
+</li>
+<li>
+<p><code>issue:priority:sort_result_topic</code></p>
+<ul>
+<li>
+<p>목적: AI 이슈 정렬 결과</p>
+</li>
+<li>
+<p>페이로드:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"projectId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>동작: 서버는 프로젝트 스트림으로 <code>ai_sort_result</code> SSE를 브로드캐스트합니다.</li>
+</ul>
+</li>
+<li>
+<p><code>media:summary:generated</code></p>
+<ul>
+<li>
+<p>목적: 미디어 요약 생성 완료 이벤트</p>
+</li>
+<li>
+<p>페이로드:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"summeryId"</span><span class="p">:</span><span class="w"> </span><span class="mi">900</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DONE"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Summary\n- ..."</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>
+<p>비고:</p>
+<ul>
+<li>
+<p>필드명이 현재 <code>summeryId</code> 입니다(오타지만 서버 코드와 동일하게 유지).</p>
+</li>
+<li>
+<p>수신 시 서버는 회의 요약을 업데이트하고, 프로젝트 스트림으로 <code>media_summary_generated</code> SSE를 전송합니다.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="outbound">큐 키 (서버에서 “나가는” 큐, outbound)<a class="headerlink" href="#outbound" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>queue:media:summary:download</code></p>
+<ul>
+<li>
+<p>목적: 요약 생성 파이프라인에 녹화 다운로드 URL 전달</p>
+</li>
+<li>
+<p>페이로드:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"summaryId"</span><span class="p">:</span><span class="w"> </span><span class="mi">900</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"downloadUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Push 방식: <code>LPUSH</code> (left push)</li>
+</ul>
+</li>
+</ul>
+<h3 id="_1">내부 세션 키<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>sse:client_key:{userId}</code></p>
+<ul>
+<li>
+<p>목적: 특정 사용자에게만 AI 분석 결과를 보내기 위한 per-user SSE client key 저장</p>
+</li>
+<li>
+<p>TTL: 30분</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="enum">Enum 목록<a class="headerlink" href="#enum" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>MeetingMode</code>: <code>CHAT | VOICE</code></p>
+</li>
+<li>
+<p><code>MeetingStatus</code>: <code>SCHEDULED | RUNNING | ENDED</code></p>
+</li>
+<li>
+<p><code>IssueStatus</code>: <code>OPEN | CLOSED</code></p>
+</li>
+<li>
+<p><code>IssuePriority</code>: <code>HIGH | MEDIUM | LOW</code></p>
+</li>
+<li>
+<p><code>MessageType</code>: <code>TEXT | SYSTEM</code></p>
+</li>
+</ul>
+<h3 id="_2">에러 응답<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<p>대부분의 엔드포인트는 에러 시 <code>ErrorResponse</code> 바디를 반환합니다.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"StatusCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_FOUND"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>HTTP 상태 코드도 위 <code>StatusCode</code>에 대응하는 값으로 설정됩니다.</p>
+<h2 id="_3">스키마 (응답)<a class="headerlink" href="#_3" title="Permanent link">¶</a></h2>
+<h3 id="projectresponse">ProjectResponse<a class="headerlink" href="#projectresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoFullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"thumbnailUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="userresponse">UserResponse<a class="headerlink" href="#userresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="meetingresponse">MeetingResponse<a class="headerlink" href="#meetingresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoFullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span><span class="p">,</span><span class="w"> </span><span class="nt">"thumbnailUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"createdBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid-string"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Daily"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SCHEDULED"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VOICE"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"endedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T15:00:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="meetingsummaryresponse">MeetingSummaryResponse<a class="headerlink" href="#meetingsummaryresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">900</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Daily - 2026-02-05T09:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"meetingId"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summaryMd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Summary\n- ..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"publishedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-05T09:35:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summaryVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"editedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"generatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-05T09:35:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-05T09:35:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-05T09:40:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="issueresponse">IssueResponse<a class="headerlink" href="#issueresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoFullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span><span class="p">,</span><span class="w"> </span><span class="nt">"thumbnailUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"githubIssueId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456789</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix bug"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OPEN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEDIUM"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"closedAt"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assignees"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="projectrecentresponse">ProjectRecentResponse<a class="headerlink" href="#projectrecentresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span><span class="w"> </span><span class="nt">"repoFullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span><span class="p">,</span><span class="w"> </span><span class="nt">"thumbnailUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"lastViewedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="chatresponse">ChatResponse<a class="headerlink" href="#chatresponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"messageType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEXT"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"editedAt"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="airesponse">AiResponse<a class="headerlink" href="#airesponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"issueId"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix bug"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OPEN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEDIUM"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assigneeIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="githubreporesponse">GithubRepoResponse<a class="headerlink" href="#githubreporesponse" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="endpoints">엔드포인트 (Endpoints)<a class="headerlink" href="#endpoints" title="Permanent link">¶</a></h2>
+<h2 id="auth">Auth<a class="headerlink" href="#auth" title="Permanent link">¶</a></h2>
+<h3 id="get-apiv1authlogin"><code>GET /api/v1/auth/login</code><a class="headerlink" href="#get-apiv1authlogin" title="Permanent link">¶</a></h3>
+<p>GitHub OAuth 로그인 플로우로 리다이렉트합니다.</p>
+<p>응답:</p>
+<ul>
+<li><code>302 Found</code> + <code>Location: /oauth2/authorization/github</code></li>
+</ul>
+<h3 id="post-apiv1authlogout"><code>POST /api/v1/auth/logout</code><a class="headerlink" href="#post-apiv1authlogout" title="Permanent link">¶</a></h3>
+<p>로그아웃 처리(세션 무효화, <code>JSESSIONID</code> 제거).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="get-apiv1authme"><code>GET /api/v1/auth/me</code><a class="headerlink" href="#get-apiv1authme" title="Permanent link">¶</a></h3>
+<p>현재 인증된 사용자 반환.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> -&gt; <code>UserResponse</code></p>
+</li>
+<li>
+<p><code>401 Unauthorized</code> (로그인 안 함)</p>
+</li>
+</ul>
+<h2 id="projects">Projects<a class="headerlink" href="#projects" title="Permanent link">¶</a></h2>
+<h3 id="get-apiv1projects"><code>GET /api/v1/projects</code><a class="headerlink" href="#get-apiv1projects" title="Permanent link">¶</a></h3>
+<p>인증된 사용자가 속한 프로젝트 목록을 조회합니다.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>ProjectResponse[]</code></li>
+</ul>
+<h3 id="post-apiv1projects"><code>POST /api/v1/projects</code><a class="headerlink" href="#post-apiv1projects" title="Permanent link">¶</a></h3>
+<p>프로젝트를 생성하고, 생성자를 <code>ADMIN</code>으로 등록합니다.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projectName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"githubUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/org/repo"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>검증: <code>projectName</code> 최대 64자, <code>githubUrl</code>은 유효한 URL이어야 함</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="get-apiv1projectsprojectid"><code>GET /api/v1/projects/{projectId}</code><a class="headerlink" href="#get-apiv1projectsprojectid" title="Permanent link">¶</a></h3>
+<p>프로젝트 상세 조회(동시에 인증된 사용자의 최근 조회 프로젝트도 갱신).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>ProjectResponse</code></li>
+</ul>
+<h3 id="get-apiv1projectsrecents"><code>GET /api/v1/projects/recents</code><a class="headerlink" href="#get-apiv1projectsrecents" title="Permanent link">¶</a></h3>
+<p>인증된 사용자의 최근 조회 프로젝트 최대 4개 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>ProjectRecentResponse[]</code></li>
+</ul>
+<h3 id="get-apiv1projectsprojectidparticipants"><code>GET /api/v1/projects/{projectId}/participants</code><a class="headerlink" href="#get-apiv1projectsprojectidparticipants" title="Permanent link">¶</a></h3>
+<p>프로젝트 참여자 목록 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>UserResponse[]</code></li>
+</ul>
+<h3 id="delete-apiv1projectsprojectid"><code>DELETE /api/v1/projects/{projectId}</code><a class="headerlink" href="#delete-apiv1projectsprojectid" title="Permanent link">¶</a></h3>
+<p>프로젝트 삭제(소유자만).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1projectsprojectidleave"><code>DELETE /api/v1/projects/{projectId}/leave</code><a class="headerlink" href="#delete-apiv1projectsprojectidleave" title="Permanent link">¶</a></h3>
+<p>프로젝트 나가기.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1projectsprojectidparticipantsuserid"><code>DELETE /api/v1/projects/{projectId}/participants/{userId}</code><a class="headerlink" href="#delete-apiv1projectsprojectidparticipantsuserid" title="Permanent link">¶</a></h3>
+<p>프로젝트에서 참여자 제거(소유자만).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="post-apiv1projectsprojectidgithubvalidate"><code>POST /api/v1/projects/{projectId}/github/validate</code><a class="headerlink" href="#post-apiv1projectsprojectidgithubvalidate" title="Permanent link">¶</a></h3>
+<p>프로젝트에 사용할 GitHub 저장소를 검증합니다.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"orgName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"repo"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>GithubRepoResponse</code></li>
+</ul>
+<h3 id="patch-apiv1projectsprojectid"><code>PATCH /api/v1/projects/{projectId}</code><a class="headerlink" href="#patch-apiv1projectsprojectid" title="Permanent link">¶</a></h3>
+<p>프로젝트 저장소 정보 업데이트.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"repoId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoFullName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org/repo"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="patch-apiv1projectsprojectidowner"><code>PATCH /api/v1/projects/{projectId}/owner</code><a class="headerlink" href="#patch-apiv1projectsprojectidowner" title="Permanent link">¶</a></h3>
+<p>프로젝트 소유권 이전.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"newOwnerId"</span><span class="p">:</span><span class="w"> </span><span class="mi">99</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="patch-apiv1projectsprojectidname"><code>PATCH /api/v1/projects/{projectId}/name</code><a class="headerlink" href="#patch-apiv1projectsprojectidname" title="Permanent link">¶</a></h3>
+<p>프로젝트 이름 변경.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-project-name"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>검증: <code>name</code> 필수, 최대 100자</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h2 id="invites">Invites<a class="headerlink" href="#invites" title="Permanent link">¶</a></h2>
+<h3 id="post-apiv1projectsinvites"><code>POST /api/v1/projects/invites</code><a class="headerlink" href="#post-apiv1projectsinvites" title="Permanent link">¶</a></h3>
+<p>프로젝트 초대 코드를 생성(관리자만).</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projectId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"expireDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li><code>expireDate</code>는 선택이며, 생략하면 서버가 매우 먼 미래로 설정합니다.</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; 초대 코드(UUID)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="s2">"3fa85f64-5717-4562-b3fc-2c963f66afa6"</span>
+</code></pre></div>
+<h3 id="get-apiv1projectsinvitesinvitecode"><code>GET /api/v1/projects/invites/{inviteCode}</code><a class="headerlink" href="#get-apiv1projectsinvitesinvitecode" title="Permanent link">¶</a></h3>
+<p>초대 코드로 프로젝트 조회.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> -&gt; <code>ProjectResponse</code></p>
+</li>
+<li>
+<p><code>400 Bad Request</code> (inviteCode가 UUID 형식이 아님)</p>
+</li>
+</ul>
+<h3 id="post-apiv1projectsinvitesinvitecode"><code>POST /api/v1/projects/invites/{inviteCode}</code><a class="headerlink" href="#post-apiv1projectsinvitesinvitecode" title="Permanent link">¶</a></h3>
+<p>초대 코드로 프로젝트 참여.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> (빈 바디)</p>
+</li>
+<li>
+<p><code>400 Bad Request</code> (inviteCode가 UUID 형식이 아님)</p>
+</li>
+</ul>
+<h2 id="meetings-channels">Meetings (Channels)<a class="headerlink" href="#meetings-channels" title="Permanent link">¶</a></h2>
+<h3 id="post-apiv1projectsprojectidadd-channel"><code>POST /api/v1/projects/{projectId}/add-channel</code><a class="headerlink" href="#post-apiv1projectsprojectidadd-channel" title="Permanent link">¶</a></h3>
+<p>프로젝트에 회의(채널) 생성(관리자만). 생성 시 상태는 <code>RUNNING</code>.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Daily"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VOICE"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; 생성된 meeting id</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="mi">123</span>
+</code></pre></div>
+<h3 id="post-apiv1projectsprojectidbook-channel"><code>POST /api/v1/projects/{projectId}/book-channel</code><a class="headerlink" href="#post-apiv1projectsprojectidbook-channel" title="Permanent link">¶</a></h3>
+<p>프로젝트에 회의(채널) 예약(관리자만). 생성 시 상태는 <code>SCHEDULED</code>, 모드는 <code>VOICE</code>.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Planning"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T15:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>
+<p>검증: <code>title</code> 최대 50자, <code>start</code>/<code>end</code>는 미래 시간이어야 함</p>
+</li>
+<li>
+<p><code>start</code>가 <code>end</code>보다 늦으면 요청을 거절합니다.</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; 생성된 meeting id</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="mi">456</span>
+</code></pre></div>
+<h3 id="get-apiv1projectsprojectidchannels"><code>GET /api/v1/projects/{projectId}/channels</code><a class="headerlink" href="#get-apiv1projectsprojectidchannels" title="Permanent link">¶</a></h3>
+<p>프로젝트의 회의(채널) 목록 조회.</p>
+<p>쿼리 파라미터:</p>
+<ul>
+<li>
+<p><code>status</code>(선택): <code>SCHEDULED | RUNNING | ENDED</code></p>
+</li>
+<li>
+<p><code>cursor</code>(권장): 이전 페이지 마지막 항목 id (첫 페이지는 <code>0</code>)</p>
+</li>
+<li>
+<p><code>page</code>, <code>size</code>, <code>sort</code>: Spring <code>Pageable</code> (<code>size</code> 기본값: <code>20</code>)</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>MeetingResponse[]</code> (<code>id</code> 내림차순)</li>
+</ul>
+<h3 id="get-apiv1projectsprojectidchannelsdate"><code>GET /api/v1/projects/{projectId}/channels/date</code><a class="headerlink" href="#get-apiv1projectsprojectidchannelsdate" title="Permanent link">¶</a></h3>
+<p>프로젝트에서 특정 기간 내 회의(채널) 목록 조회.</p>
+<p>쿼리 파라미터(필수):</p>
+<ul>
+<li>
+<p><code>start</code> (ISO-8601 <code>LocalDateTime</code>)</p>
+</li>
+<li>
+<p><code>end</code> (ISO-8601 <code>LocalDateTime</code>)</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>MeetingResponse[]</code> (<code>id</code> 내림차순)</li>
+</ul>
+<h3 id="get-apiv1channelschannelid"><code>GET /api/v1/channels/{channelId}</code><a class="headerlink" href="#get-apiv1channelschannelid" title="Permanent link">¶</a></h3>
+<p>회의(채널) 상세 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>MeetingResponse</code></li>
+</ul>
+<h3 id="patch-apiv1channelschannelid"><code>PATCH /api/v1/channels/{channelId}</code><a class="headerlink" href="#patch-apiv1channelschannelid" title="Permanent link">¶</a></h3>
+<p>회의(채널) 제목 및/또는 시간 범위 수정.</p>
+<p>쿼리 파라미터(모두 선택):</p>
+<ul>
+<li>
+<p><code>title</code>(string)</p>
+</li>
+<li>
+<p><code>start</code>(ISO-8601 <code>LocalDateTime</code>)</p>
+</li>
+<li>
+<p><code>due</code>(ISO-8601 <code>LocalDateTime</code>, 종료 시간)</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1channelschannelid"><code>DELETE /api/v1/channels/{channelId}</code><a class="headerlink" href="#delete-apiv1channelschannelid" title="Permanent link">¶</a></h3>
+<p>회의(채널) 삭제.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="post-apiv1channelschannelidwebrtc"><code>POST /api/v1/channels/{channelId}/webrtc</code><a class="headerlink" href="#post-apiv1channelschannelidwebrtc" title="Permanent link">¶</a></h3>
+<p>VOICE 회의 참여(미디어 커넥션 생성 + 참여 상태 마킹).</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> -&gt; connection token (string)</p>
+</li>
+<li>
+<p><code>409 Conflict</code> (회의 모드가 <code>VOICE</code>가 아님)</p>
+</li>
+</ul>
+<h3 id="delete-apiv1channelschannelidwebrtc"><code>DELETE /api/v1/channels/{channelId}/webrtc</code><a class="headerlink" href="#delete-apiv1channelschannelidwebrtc" title="Permanent link">¶</a></h3>
+<p>VOICE 회의 나가기(미디어 커넥션 종료 + 퇴장 상태 마킹).</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> (빈 바디)</p>
+</li>
+<li>
+<p><code>409 Conflict</code> (회의 모드가 <code>VOICE</code>가 아님)</p>
+</li>
+</ul>
+<h3 id="get-apiv1channelschannelidwebrtcusers"><code>GET /api/v1/channels/{channelId}/webrtc/users</code><a class="headerlink" href="#get-apiv1channelschannelidwebrtcusers" title="Permanent link">¶</a></h3>
+<p>VOICE 회의에 연결된 사용자 목록 조회.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> -&gt; <code>UserResponse[]</code></p>
+</li>
+<li>
+<p><code>409 Conflict</code> (회의 모드가 <code>VOICE</code>가 아님)</p>
+</li>
+</ul>
+<h3 id="post-apiv1channelschannelidrecordingstart"><code>POST /api/v1/channels/{channelId}/recording/start</code><a class="headerlink" href="#post-apiv1channelschannelidrecordingstart" title="Permanent link">¶</a></h3>
+<p>VOICE 회의 녹화 시작.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; recording id (long)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="mi">789</span>
+</code></pre></div>
+<h3 id="post-apiv1channelschannelidrecordingstoprecordid"><code>POST /api/v1/channels/{channelId}/recording/stop/{recordId}</code><a class="headerlink" href="#post-apiv1channelschannelidrecordingstoprecordid" title="Permanent link">¶</a></h3>
+<p>VOICE 회의 녹화 중단.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h2 id="chat-messages">Chat Messages<a class="headerlink" href="#chat-messages" title="Permanent link">¶</a></h2>
+<h3 id="post-apiv1channelschannelidchats"><code>POST /api/v1/channels/{channelId}/chats</code><a class="headerlink" href="#post-apiv1channelschannelidchats" title="Permanent link">¶</a></h3>
+<p>채널에 채팅 메시지 전송.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="get-apiv1channelschannelidchats"><code>GET /api/v1/channels/{channelId}/chats</code><a class="headerlink" href="#get-apiv1channelschannelidchats" title="Permanent link">¶</a></h3>
+<p>채널의 채팅 메시지 목록 조회.</p>
+<p>쿼리 파라미터:</p>
+<ul>
+<li>
+<p><code>lastId</code>(선택): 이전 페이지 마지막 채팅 id</p>
+</li>
+<li>
+<p><code>page</code>, <code>size</code>, <code>sort</code>: Spring <code>Pageable</code> (<code>size</code> 기본값: <code>20</code>)</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>ChatResponse[]</code> (<code>id</code> 오름차순)</li>
+</ul>
+<h3 id="patch-apiv1channelschatschatid"><code>PATCH /api/v1/channels/chats/{chatId}</code><a class="headerlink" href="#patch-apiv1channelschatschatid" title="Permanent link">¶</a></h3>
+<p>채팅 메시지 수정(작성자만).</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edited message"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1channelschatschatid"><code>DELETE /api/v1/channels/chats/{chatId}</code><a class="headerlink" href="#delete-apiv1channelschatschatid" title="Permanent link">¶</a></h3>
+<p>채팅 메시지 삭제(작성자만).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h2 id="sse-server-sent-events">SSE (Server-Sent Events)<a class="headerlink" href="#sse-server-sent-events" title="Permanent link">¶</a></h2>
+<h3 id="get-apiv1channelschannelidstream"><code>GET /api/v1/channels/{channelId}/stream</code><a class="headerlink" href="#get-apiv1channelschannelidstream" title="Permanent link">¶</a></h3>
+<p>채널의 실시간 이벤트를 구독합니다. 사용자는 해당 채널이 속한 프로젝트 멤버여야 합니다.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> + <code>Content-Type: text/event-stream</code></p>
+</li>
+<li>
+<p><code>403 Forbidden</code> (멤버가 아님)</p>
+</li>
+</ul>
+<p>Emitter 동작:</p>
+<ul>
+<li>
+<p>타임아웃: 30분(클라이언트는 재연결 권장)</p>
+</li>
+<li>
+<p>Keep-alive: 20초마다 <code>ping</code> 이벤트</p>
+</li>
+</ul>
+<p>이벤트:</p>
+<ul>
+<li>
+<p><code>message</code>: 새 채팅 메시지</p>
+</li>
+<li>
+<p><code>chat_update</code>: 채팅 메시지 수정</p>
+</li>
+<li>
+<p><code>chat_delete</code>: 채팅 메시지 삭제</p>
+</li>
+<li>
+<p><code>media_participant_joined</code></p>
+</li>
+<li>
+<p><code>media_participant_left</code></p>
+</li>
+<li>
+<p><code>media_recording_start</code></p>
+</li>
+<li>
+<p><code>media_recording_stop</code></p>
+</li>
+<li>
+<p><code>media_error</code></p>
+</li>
+<li>
+<p><code>ping</code></p>
+</li>
+</ul>
+<p>이벤트 페이로드 예시:</p>
+<p><code>message</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"senderId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sentAtEpochMs"</span><span class="p">:</span><span class="w"> </span><span class="mi">1738209000000</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>chat_update</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"chatId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Edited message"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"editedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>chat_delete</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"chatId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Original message"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_participant_joined</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session-id"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connection-id"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_participant_left</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session-id"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connection-id"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubId"</span><span class="p">:</span><span class="w"> </span><span class="mi">999999</span><span class="p">,</span><span class="w"> </span><span class="nt">"githubLogin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"octocat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Octo Cat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"avatarUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span><span class="w"> </span><span class="nt">"lastLoginAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_recording_start</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session-id"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_recording_stop</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-26T14:30:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session-id"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_error</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"channelId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"errorResponse"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"StatusCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INTERNAL_SERVER_ERROR"</span><span class="p">,</span><span class="w"> </span><span class="nt">"Message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li><code>chat_update</code>, <code>chat_delete</code>는 현재 <code>projectId</code>를 channel id로 사용해 브로드캐스트됩니다. 해당 업데이트를 받아야 하는 클라이언트는 <code>/api/v1/channels/{projectId}/stream</code>도 함께 구독해야 합니다.</li>
+</ul>
+<h3 id="get-apiv1projectsprojectidstream"><code>GET /api/v1/projects/{projectId}/stream</code><a class="headerlink" href="#get-apiv1projectsprojectidstream" title="Permanent link">¶</a></h3>
+<p>프로젝트 단위 이벤트를 구독합니다. 사용자는 프로젝트 멤버여야 합니다.</p>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code> + <code>Content-Type: text/event-stream</code></p>
+</li>
+<li>
+<p><code>403 Forbidden</code> (멤버가 아님)</p>
+</li>
+</ul>
+<p>Emitter 동작:</p>
+<ul>
+<li>
+<p>타임아웃: 30분(클라이언트 재연결 권장)</p>
+</li>
+<li>
+<p>Keep-alive: 20초마다 <code>ping</code> 이벤트</p>
+</li>
+</ul>
+<p>이벤트:</p>
+<ul>
+<li>
+<p><code>ai_sort_result</code>: AI 정렬 후 이슈 id 목록(정렬된 순서)</p>
+</li>
+<li>
+<p><code>ai_analysis_result</code>: 단일 이슈 우선순위 분석 결과</p>
+</li>
+<li>
+<p><code>media_summary_generated</code>: 프로젝트의 미디어 요약 생성 완료</p>
+</li>
+<li>
+<p><code>ping</code></p>
+</li>
+</ul>
+<p><code>ai_sort_result</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">]</span>
+</code></pre></div>
+<p><code>ai_analysis_result</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"issueId"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"priority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEDIUM"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assigneeIds"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>media_summary_generated</code> data:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projectId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summaryId"</span><span class="p">:</span><span class="w"> </span><span class="mi">900</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>
+<p><code>GET /api/v1/projects/{projectId}/issues/active</code>는 정렬 작업을 큐에 넣고, 비동기 결과가 도착하면 <code>ai_sort_result</code>를 발생시킵니다.</p>
+</li>
+<li>
+<p><code>ai_analysis_result</code>는 요청한 사용자에게만(per-session client key) 전달됩니다.</p>
+</li>
+</ul>
+<h2 id="issues">Issues<a class="headerlink" href="#issues" title="Permanent link">¶</a></h2>
+<h3 id="get-apiv1projectsprojectidissuesactive"><code>GET /api/v1/projects/{projectId}/issues/active</code><a class="headerlink" href="#get-apiv1projectsprojectidissuesactive" title="Permanent link">¶</a></h3>
+<p>프로젝트의 활성(OPEN) 이슈 최대 5개를 <code>updatedAt</code> 내림차순으로 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>IssueResponse[]</code></li>
+</ul>
+<p>비고:</p>
+<ul>
+<li>조회와 함께 해당 이슈들에 대한 AI 정렬 작업도 큐에 넣습니다.</li>
+</ul>
+<h3 id="get-apiv1projectsprojectidissues"><code>GET /api/v1/projects/{projectId}/issues</code><a class="headerlink" href="#get-apiv1projectsprojectidissues" title="Permanent link">¶</a></h3>
+<p>프로젝트의 모든 이슈 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>IssueResponse[]</code></li>
+</ul>
+<h3 id="post-apiv1projectsprojectidissueanalyze"><code>POST /api/v1/projects/{projectId}/issue/analyze</code><a class="headerlink" href="#post-apiv1projectsprojectidissueanalyze" title="Permanent link">¶</a></h3>
+<p>이슈 우선순위를 분석합니다(드래프트 이슈 생성 + AI 분석 작업 큐잉).</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix bug"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Steps to reproduce..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OPEN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assigneeIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>AiResponse</code></li>
+</ul>
+<h3 id="post-apiv1projectsprojectidissues"><code>POST /api/v1/projects/{projectId}/issues</code><a class="headerlink" href="#post-apiv1projectsprojectidissues" title="Permanent link">¶</a></h3>
+<p>(analyze로 생성된) 드래프트 이슈로 GitHub 이슈를 생성합니다.</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"orgName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"repoName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"repo"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueId"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issueStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OPEN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issuePriority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HIGH"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix bug"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Steps to reproduce..."</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assigneeIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>
+<p><code>issueId</code>는 <strong>같은 작성자가 analyze로 만든 기존 드래프트 이슈</strong>여야 합니다.</p>
+</li>
+<li>
+<p><code>issueStatus</code>는 입력을 받지만 현재 서버에서는 사용하지 않습니다.</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>IssueResponse[]</code> (0 또는 1개)</li>
+</ul>
+<h3 id="patch-apiv1projectsprojectidissuesissueid"><code>PATCH /api/v1/projects/{projectId}/issues/{issueId}</code><a class="headerlink" href="#patch-apiv1projectsprojectidissuesissueid" title="Permanent link">¶</a></h3>
+<p>이슈 수정(작성자만).</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Updated title"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Updated body"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"assigneeIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1projectsprojectidissuesissueid"><code>DELETE /api/v1/projects/{projectId}/issues/{issueId}</code><a class="headerlink" href="#delete-apiv1projectsprojectidissuesissueid" title="Permanent link">¶</a></h3>
+<p>이슈 삭제(작성자만).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h2 id="meeting-summaries">Meeting Summaries<a class="headerlink" href="#meeting-summaries" title="Permanent link">¶</a></h2>
+<h3 id="get-apiv1projectsprojectidsummary"><code>GET /api/v1/projects/{projectId}/summary</code><a class="headerlink" href="#get-apiv1projectsprojectidsummary" title="Permanent link">¶</a></h3>
+<p>프로젝트의 회의 요약 목록 조회.</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> -&gt; <code>MeetingSummaryResponse[]</code> (<code>createdAt</code> 내림차순)</li>
+</ul>
+<h3 id="patch-apiv1projectsprojectidsummarysummaryid"><code>PATCH /api/v1/projects/{projectId}/summary/{summaryId}</code><a class="headerlink" href="#patch-apiv1projectsprojectidsummarysummaryid" title="Permanent link">¶</a></h3>
+<p>회의 요약 수정(프로젝트 멤버만).</p>
+<p>요청 바디:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Daily - 2026-02-05"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Summary\n- ..."</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>비고:</p>
+<ul>
+<li>
+<p>비어있지 않은 필드만 해당 값으로 업데이트합니다.</p>
+</li>
+<li>
+<p>업데이트 시 <code>summaryVersion</code>이 증가합니다.</p>
+</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h3 id="delete-apiv1projectsprojectidsummarysummaryid"><code>DELETE /api/v1/projects/{projectId}/summary/{summaryId}</code><a class="headerlink" href="#delete-apiv1projectsprojectidsummarysummaryid" title="Permanent link">¶</a></h3>
+<p>회의 요약 삭제(프로젝트 관리자만).</p>
+<p>응답:</p>
+<ul>
+<li><code>200 OK</code> (빈 바디)</li>
+</ul>
+<h2 id="webhooks">Webhooks<a class="headerlink" href="#webhooks" title="Permanent link">¶</a></h2>
+<h3 id="post-apiv1webhooksopenvidu"><code>POST /api/v1/webhooks/openvidu</code><a class="headerlink" href="#post-apiv1webhooksopenvidu" title="Permanent link">¶</a></h3>
+<p>OpenVidu 서버 웹훅 엔드포인트.</p>
+<p>헤더:</p>
+<ul>
+<li><code>X-OpenVidu-Token</code>: 선택적 공유 시크릿(서버 설정에 따라 검증)</li>
+</ul>
+<p>요청 바디:</p>
+<ul>
+<li>OpenVidu 웹훅 JSON 페이로드(<code>event</code> 필드에 이벤트 이름 포함)</li>
+</ul>
+<p>응답:</p>
+<ul>
+<li>
+<p><code>200 OK</code>: 성공 시 또는 페이로드 파싱이 실패해도 반환</p>
+</li>
+<li>
+<p><code>401 Unauthorized</code>: <code>X-OpenVidu-Token</code>이 서버에 설정되어 있고, 요청 값이 일치하지 않는 경우</p>
+</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../javascripts/ngrok-swagger-patch.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="../../javascripts/mermaid.mjs" type="module"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../assets/javascripts/panzoom.min.js"></script>
+<script src="../../assets/javascripts/zoompan.js"></script>
+<script>document$.subscribe(() => {
+            const dark_scheme_name = "slate"
+            
+            window.scheme = document.body.getAttribute("data-md-color-scheme")
+            const options = {
+                attributeFilter: ['data-md-color-scheme'],
+            };
+            function color_scheme_callback(mutations) {
+                for (let mutation of mutations) {
+                    if (mutation.attributeName === "data-md-color-scheme") {
+                        scheme = document.body.getAttribute("data-md-color-scheme")
+                        var iframe_list = document.getElementsByClassName("redoc-iframe")
+                        for(var i = 0; i < iframe_list.length; i++) {
+                            var ele = iframe_list.item(i);
+                            if (ele) {
+                                if (scheme === dark_scheme_name) {
+                                    ele.contentWindow.enable_dark_mode();
+                                } else {
+                                    ele.contentWindow.disable_dark_mode();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            observer = new MutationObserver(color_scheme_callback);
+            observer.observe(document.body, options);
+            })</script></body>
+</html>

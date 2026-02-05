@@ -1,0 +1,1375 @@
+openapi: 3.0.3
+info:
+  title: Didit Server API
+  version: "v1"
+  description: |
+    Base path: /api/v1
+    Session auth via JSESSIONID cookie (GitHub OAuth2).
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development
+  - url: https://api.did-it.xyz/api/v1
+    description: Deployed server
+tags:
+  - name: Auth
+  - name: Projects
+  - name: Invites
+  - name: Meetings
+  - name: Meeting Summaries
+  - name: Chat
+  - name: SSE
+  - name: Issues
+  - name: Webhooks
+security:
+  - cookieAuth: []
+paths:
+  /auth/login:
+    get:
+      tags: [Auth]
+      summary: Redirect to GitHub OAuth login
+      security: []
+      responses:
+        "302":
+          description: "Redirect to /oauth2/authorization/github"
+          headers:
+            Location:
+              schema:
+                type: string
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout and clear session cookie
+      security: []
+      responses:
+        "200":
+          description: Logged out
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          description: Unauthorized
+  /projects:
+    get:
+      tags: [Projects]
+      summary: List projects for the authenticated user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectResponse"
+    post:
+      tags: [Projects]
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProjectRequest"
+      responses:
+        "200":
+          description: Created
+  /projects/recents:
+    get:
+      tags: [Projects]
+      summary: Get recently viewed projects
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectRecentResponse"
+  /projects/{projectId}:
+    get:
+      tags: [Projects]
+      summary: Get project details
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+    delete:
+      tags: [Projects]
+      summary: Delete a project (owner only)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: Deleted
+    patch:
+      tags: [Projects]
+      summary: Update project repository info
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRepoRequest"
+      responses:
+        "200":
+          description: Updated
+  /projects/{projectId}/participants:
+    get:
+      tags: [Projects]
+      summary: Get project participants
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+  /projects/{projectId}/participants/{userId}:
+    delete:
+      tags: [Projects]
+      summary: Remove participant (owner only)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Removed
+  /projects/{projectId}/summary:
+    get:
+      tags: [Meeting Summaries]
+      summary: List meeting summaries in a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingSummaryResponse"
+  /projects/{projectId}/summary/{summaryId}:
+    patch:
+      tags: [Meeting Summaries]
+      summary: Update a meeting summary
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/SummaryId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSummaryRequest"
+      responses:
+        "200":
+          description: Updated
+    delete:
+      tags: [Meeting Summaries]
+      summary: Delete a meeting summary (admin only)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/SummaryId"
+      responses:
+        "200":
+          description: Deleted
+  /projects/{projectId}/leave:
+    delete:
+      tags: [Projects]
+      summary: Leave a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: Left
+  /projects/{projectId}/github/validate:
+    post:
+      tags: [Projects]
+      summary: Validate GitHub repository for the project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateGithubRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GithubRepoResponse"
+  /projects/{projectId}/owner:
+    patch:
+      tags: [Projects]
+      summary: Transfer project ownership
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferOwnerRequest"
+      responses:
+        "200":
+          description: Transferred
+  /projects/{projectId}/name:
+    patch:
+      tags: [Projects]
+      summary: Update project name
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectNameRequest"
+      responses:
+        "200":
+          description: Updated
+  /projects/invites:
+    post:
+      tags: [Invites]
+      summary: Create invite code (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddProjectInviteRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+  /projects/invites/{inviteCode}:
+    get:
+      tags: [Invites]
+      summary: Get project by invite code
+      parameters:
+        - $ref: "#/components/parameters/InviteCode"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+        "400":
+          description: Bad Request (invalid UUID)
+    post:
+      tags: [Invites]
+      summary: Join project by invite code
+      parameters:
+        - $ref: "#/components/parameters/InviteCode"
+      responses:
+        "200":
+          description: Joined
+        "400":
+          description: Bad Request (invalid UUID)
+  /projects/{projectId}/add-channel:
+    post:
+      tags: [Meetings]
+      summary: Create a meeting (admin only, status RUNNING)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMeetingRequest"
+      responses:
+        "200":
+          description: Created meeting id
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /projects/{projectId}/book-channel:
+    post:
+      tags: [Meetings]
+      summary: Reserve a meeting (admin only, status SCHEDULED)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookMeetingRequest"
+      responses:
+        "200":
+          description: Created meeting id
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        "400":
+          description: Bad Request (start after end)
+  /projects/{projectId}/channels:
+    get:
+      tags: [Meetings]
+      summary: List meetings in a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/MeetingStatus"
+        - name: cursor
+          in: query
+          description: Last item id from previous page (use 0 for first page)
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingResponse"
+  /projects/{projectId}/channels/date:
+    get:
+      tags: [Meetings]
+      summary: List meetings in a project within a time range
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingResponse"
+  /channels/{channelId}:
+    get:
+      tags: [Meetings]
+      summary: Get meeting details
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingResponse"
+    patch:
+      tags: [Meetings]
+      summary: Update meeting title and/or time range
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+        - name: title
+          in: query
+          schema:
+            type: string
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: due
+          in: query
+          description: End time
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Updated
+    delete:
+      tags: [Meetings]
+      summary: Delete a meeting
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: Deleted
+  /channels/{channelId}/webrtc:
+    post:
+      tags: [Meetings]
+      summary: Join a VOICE meeting (WebRTC)
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: Connection token
+          content:
+            application/json:
+              schema:
+                type: string
+        "409":
+          description: Conflict (meeting mode not VOICE)
+    delete:
+      tags: [Meetings]
+      summary: Leave a VOICE meeting (WebRTC)
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: Left
+        "409":
+          description: Conflict (meeting mode not VOICE)
+  /channels/{channelId}/webrtc/users:
+    get:
+      tags: [Meetings]
+      summary: List users connected to a VOICE meeting
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+        "409":
+          description: Conflict (meeting mode not VOICE)
+  /channels/{channelId}/recording/start:
+    post:
+      tags: [Meetings]
+      summary: Start a recording for a VOICE meeting
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: Recording id
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        "409":
+          description: Conflict (meeting mode not VOICE)
+  /channels/{channelId}/recording/stop/{recordId}:
+    post:
+      tags: [Meetings]
+      summary: Stop a recording for a VOICE meeting
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Stopped
+        "409":
+          description: Conflict (meeting mode not VOICE)
+  /channels/{channelId}/chats:
+    post:
+      tags: [Chat]
+      summary: Send a chat message to a channel
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageRequest"
+      responses:
+        "200":
+          description: Sent
+    get:
+      tags: [Chat]
+      summary: List chat messages in a channel
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+        - name: lastId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatResponse"
+  /channels/chats/{chatId}:
+    patch:
+      tags: [Chat]
+      summary: Update a chat message (author only)
+      parameters:
+        - $ref: "#/components/parameters/ChatId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChatMessage"
+      responses:
+        "200":
+          description: Updated
+    delete:
+      tags: [Chat]
+      summary: Delete a chat message (author only)
+      parameters:
+        - $ref: "#/components/parameters/ChatId"
+      responses:
+        "200":
+          description: Deleted
+  /channels/{channelId}/stream:
+    get:
+      tags: [SSE]
+      summary: Subscribe to channel SSE stream
+      description: |
+        Emits chat and media events for the channel.
+        Note: chat_update and chat_delete are broadcast using projectId as the channel id.
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: text/event-stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              examples:
+                message:
+                  summary: message
+                  value: |
+                    event: message
+                    data: {"channelId":1,"senderId":10,"content":"Hello","sentAtEpochMs":1738209000000}
+                chat_update:
+                  summary: chat_update
+                  value: |
+                    event: chat_update
+                    data: {"chatId":1000,"content":"Edited","editedAt":"2026-01-26T14:30:00"}
+                chat_delete:
+                  summary: chat_delete
+                  value: |
+                    event: chat_delete
+                    data: {"chatId":1000,"content":"Original message"}
+                media_participant_joined:
+                  summary: media_participant_joined
+                  value: |
+                    event: media_participant_joined
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id","connectionId":"conn-id","user":{"id":10,"githubId":999999,"githubLogin":"octocat","name":"Octo Cat","avatarUrl":"https://...","createdAt":"2026-01-26T14:30:00","lastLoginAt":"2026-01-26T14:30:00"}}
+                media_participant_left:
+                  summary: media_participant_left
+                  value: |
+                    event: media_participant_left
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id","connectionId":"conn-id","user":{"id":10,"githubId":999999,"githubLogin":"octocat","name":"Octo Cat","avatarUrl":"https://...","createdAt":"2026-01-26T14:30:00","lastLoginAt":"2026-01-26T14:30:00"}}
+                media_recording_start:
+                  summary: media_recording_start
+                  value: |
+                    event: media_recording_start
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id"}
+                media_recording_stop:
+                  summary: media_recording_stop
+                  value: |
+                    event: media_recording_stop
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id"}
+                media_error:
+                  summary: media_error
+                  value: |
+                    event: media_error
+                    data: {"channelId":1,"errorResponse":{"statusCode":"INTERNAL_SERVER_ERROR","message":"..."}}
+                ping:
+                  summary: ping
+                  value: |
+                    event: ping
+                    data: ""
+          x-sse-events:
+            - name: message
+              payload:
+                $ref: "#/components/schemas/SseMessagePayload"
+            - name: chat_update
+              payload:
+                $ref: "#/components/schemas/SseChatUpdatePayload"
+            - name: chat_delete
+              payload:
+                $ref: "#/components/schemas/SseChatDeletePayload"
+            - name: media_participant_joined
+              payload:
+                $ref: "#/components/schemas/SseMediaParticipantPayload"
+            - name: media_participant_left
+              payload:
+                $ref: "#/components/schemas/SseMediaParticipantPayload"
+            - name: media_recording_start
+              payload:
+                $ref: "#/components/schemas/SseMediaRecordingPayload"
+            - name: media_recording_stop
+              payload:
+                $ref: "#/components/schemas/SseMediaRecordingPayload"
+            - name: media_error
+              payload:
+                $ref: "#/components/schemas/SseMediaErrorPayload"
+            - name: ping
+              payload:
+                type: string
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /projects/{projectId}/stream:
+    get:
+      tags: [SSE]
+      summary: Subscribe to project SSE stream
+      description: Emits AI sort results, AI analysis results (per user), media summary events, and ping.
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: text/event-stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              examples:
+                ai_sort_result:
+                  summary: ai_sort_result
+                  value: |
+                    event: ai_sort_result
+                    data: [100,101,102]
+                ai_analysis_result:
+                  summary: ai_analysis_result
+                  value: |
+                    event: ai_analysis_result
+                    data: {"issueId":100,"title":null,"body":null,"status":null,"priority":"MEDIUM","assigneeIds":null}
+                media_summary_generated:
+                  summary: media_summary_generated
+                  value: |
+                    event: media_summary_generated
+                    data: {"projectId":1,"summaryId":900}
+                ping:
+                  summary: ping
+                  value: |
+                    event: ping
+                    data: ""
+          x-sse-events:
+            - name: ai_sort_result
+              payload:
+                $ref: "#/components/schemas/SseAiSortResultPayload"
+            - name: ai_analysis_result
+              payload:
+                $ref: "#/components/schemas/AiResponse"
+            - name: media_summary_generated
+              payload:
+                $ref: "#/components/schemas/SseMediaSummaryGeneratedPayload"
+            - name: ping
+              payload:
+                type: string
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /projects/{projectId}/issues/active:
+    get:
+      tags: [Issues]
+      summary: Get up to 5 active issues in a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+  /projects/{projectId}/issues:
+    get:
+      tags: [Issues]
+      summary: Get all issues in a project
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+    post:
+      tags: [Issues]
+      summary: Create a GitHub issue from a draft issue
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIssueRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+  /projects/{projectId}/issue/analyze:
+    post:
+      tags: [Issues]
+      summary: Analyze issue priority (draft + async AI)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeIssueRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiResponse"
+  /projects/{projectId}/issues/{issueId}:
+    patch:
+      tags: [Issues]
+      summary: Update an issue (author only)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/IssueId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateIssueRequest"
+      responses:
+        "200":
+          description: Updated
+    delete:
+      tags: [Issues]
+      summary: Delete an issue (author only)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/IssueId"
+      responses:
+        "200":
+          description: Deleted
+  /webhooks/openvidu:
+    post:
+      tags: [Webhooks]
+      summary: OpenVidu webhook endpoint
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized (invalid X-OpenVidu-Token)
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ChannelId:
+      name: channelId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    IssueId:
+      name: issueId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    InviteCode:
+      name: inviteCode
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    RecordId:
+      name: recordId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ChatId:
+      name: chatId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    SummaryId:
+      name: summaryId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    Size:
+      name: size
+      in: query
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+    Sort:
+      name: sort
+      in: query
+      description: "Sort criteria in the format property,asc|desc"
+      schema:
+        type: string
+  responses:
+    Forbidden:
+      description: Forbidden (body may be empty)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          description: HttpStatus enum name
+        message:
+          type: string
+      required: [statusCode, message]
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+        repoId:
+          type: integer
+          format: int64
+        repoFullName:
+          type: string
+        thumbnailUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        githubId:
+          type: integer
+          format: int64
+        githubLogin:
+          type: string
+        name:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+    MeetingResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        createdBy:
+          $ref: "#/components/schemas/UserResponse"
+        sessionId:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/MeetingStatus"
+        mode:
+          $ref: "#/components/schemas/MeetingMode"
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    MeetingSummaryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        meetingId:
+          type: integer
+          format: int64
+          nullable: true
+        summaryMd:
+          type: string
+          nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        summaryVersion:
+          type: integer
+          format: int32
+        editedBy:
+          $ref: "#/components/schemas/UserResponse"
+        generatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    IssueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        githubIssueId:
+          type: integer
+          format: int64
+          nullable: true
+        issueNo:
+          type: integer
+          format: int32
+          nullable: true
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        priority:
+          $ref: "#/components/schemas/IssuePriority"
+        author:
+          $ref: "#/components/schemas/UserResponse"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+          nullable: true
+        assignees:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+    ProjectRecentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: "#/components/schemas/UserResponse"
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        lastViewedAt:
+          type: string
+          format: date-time
+    ChatResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        messageType:
+          $ref: "#/components/schemas/MessageType"
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        editedAt:
+          type: string
+          format: date-time
+          nullable: true
+    AiResponse:
+      type: object
+      properties:
+        issueId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        priority:
+          $ref: "#/components/schemas/IssuePriority"
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    GithubRepoResponse:
+      type: object
+      properties:
+        repoId:
+          type: integer
+          format: int64
+        repoName:
+          type: string
+    AddProjectRequest:
+      type: object
+      required: [projectName]
+      properties:
+        projectName:
+          type: string
+          maxLength: 64
+        githubUrl:
+          type: string
+          format: uri
+    AddProjectInviteRequest:
+      type: object
+      required: [projectId]
+      properties:
+        projectId:
+          type: integer
+          format: int64
+        expireDate:
+          type: string
+          format: date-time
+          nullable: true
+    CreateMeetingRequest:
+      type: object
+      required: [title, mode]
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        mode:
+          $ref: "#/components/schemas/MeetingMode"
+    BookMeetingRequest:
+      type: object
+      required: [title, start, end]
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    SendMessageRequest:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+    UpdateChatMessage:
+      type: object
+      properties:
+        content:
+          type: string
+    AnalyzeIssueRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    CreateIssueRequest:
+      type: object
+      properties:
+        orgName:
+          type: string
+        repoName:
+          type: string
+        issueId:
+          type: integer
+          format: int64
+        issueStatus:
+          $ref: "#/components/schemas/IssueStatus"
+        issuePriority:
+          $ref: "#/components/schemas/IssuePriority"
+        title:
+          type: string
+        body:
+          type: string
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    UpdateIssueRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        issueStatus:
+          $ref: "#/components/schemas/IssueStatus"
+        issuePriority:
+          $ref: "#/components/schemas/IssuePriority"
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    UpdateSummaryRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        summary:
+          type: string
+    ValidateGithubRequest:
+      type: object
+      required: [orgName, repoName]
+      properties:
+        orgName:
+          type: string
+        repoName:
+          type: string
+    UpdateRepoRequest:
+      type: object
+      required: [repoId, repoFullName]
+      properties:
+        repoId:
+          type: integer
+          format: int64
+        repoFullName:
+          type: string
+    TransferOwnerRequest:
+      type: object
+      required: [newOwnerId]
+      properties:
+        newOwnerId:
+          type: integer
+          format: int64
+    UpdateProjectNameRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+    MeetingMode:
+      type: string
+      enum: [CHAT, VOICE]
+    MeetingStatus:
+      type: string
+      enum: [SCHEDULED, RUNNING, ENDED]
+    IssueStatus:
+      type: string
+      enum: [OPEN, CLOSED]
+    IssuePriority:
+      type: string
+      enum: [HIGH, MEDIUM, LOW]
+    MessageType:
+      type: string
+      enum: [TEXT, SYSTEM]
+    SseMessagePayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        senderId:
+          type: integer
+          format: int64
+        content:
+          type: string
+        sentAtEpochMs:
+          type: integer
+          format: int64
+    SseChatUpdatePayload:
+      type: object
+      properties:
+        chatId:
+          type: integer
+          format: int64
+        content:
+          type: string
+        editedAt:
+          type: string
+          format: date-time
+    SseChatDeletePayload:
+      type: object
+      properties:
+        chatId:
+          type: integer
+          format: int64
+        content:
+          type: string
+    SseMediaParticipantPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+        sessionId:
+          type: string
+        connectionId:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserResponse"
+    SseMediaRecordingPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+        sessionId:
+          type: string
+    SseMediaErrorPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        errorResponse:
+          $ref: "#/components/schemas/ErrorResponse"
+    SseAiSortResultPayload:
+      type: array
+      items:
+        type: integer
+        format: int64
+    SseMediaSummaryGeneratedPayload:
+      type: object
+      properties:
+        projectId:
+          type: integer
+          format: int64
+        summaryId:
+          type: integer
+          format: int64

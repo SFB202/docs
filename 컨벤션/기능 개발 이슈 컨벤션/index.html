@@ -1,0 +1,1028 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../Spring%20Validation%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%26%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/" rel="prev"/>
+<link href="../%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EC%BB%A8%EB%B2%A4%EC%85%98/" rel="next"/>
+<link href="../../feed_rss_created.xml" rel="alternate" title="RSS feed" type="application/rss+xml"/>
+<link href="../../feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>기능 개발 이슈 컨벤션 - 개발 문서</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/stylesheets/panzoom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".mermaid", "img", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<body data-md-color-accent="amber" data-md-color-primary="brown" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#_1">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="개발 문서" class="md-header__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            개발 문서
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              기능 개발 이슈 컨벤션
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="다크 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="brown" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="다크 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path></svg>
+</label>
+<input aria-label="라이트 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="brown" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="라이트 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EA%B8%B0%ED%9A%8D/">
+          
+  
+  
+  기획
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EC%84%A4%EA%B3%84/">
+          
+  
+  
+  설계
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  컨벤션
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../API/Didit%20API%20Swagger/">
+          
+  
+  
+  API
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="개발 문서" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    개발 문서
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    기획
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    기획
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/API%20DOC%20-%20%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    API DOC   기획
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ERD
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ERD
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/ERD/Logical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Logical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    요구사항
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    요구사항
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/Feature%20Request%20Table/">
+<span class="md-ellipsis">
+    
+  
+    Feature Request Table
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%281%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (1차)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%282%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (2차)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    설계
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    설계
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Architecture/">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/MileStone/">
+<span class="md-ellipsis">
+    
+  
+    MileStone
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Physical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Physical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    컨벤션
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    컨벤션
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Git%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    Git 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Result%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Result 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../SSE/">
+<span class="md-ellipsis">
+    
+  
+    Spring MVC SSE 아키텍처/컨벤션/사용설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Spring%20Validation%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%26%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Spring Validation 컨벤션 &amp; 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    기능 개발 이슈 컨벤션
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    기능 개발 이슈 컨벤션
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        제목
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        본문 (메인 이슈 기준)
+      
+    </span>
+</a>
+<nav aria-label="본문 (메인 이슈 기준)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-what-to-build">
+<span class="md-ellipsis">
+      
+        1) What to build (무엇을 개발하나) — 필수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-api">
+<span class="md-ellipsis">
+      
+        2) (선택) API
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-acceptance-criteria">
+<span class="md-ellipsis">
+      
+        3) Acceptance Criteria ✅ (완료조건 표) — 필수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-sub-issues">
+<span class="md-ellipsis">
+      
+        4) Sub-issues — 선택
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_4">
+<span class="md-ellipsis">
+      
+        복붙용 템플릿 (메인 이슈)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sub-issues">
+<span class="md-ellipsis">
+      
+        Sub-issues 섹션에 넣을 문구(권장)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    네이밍 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EC%9C%A0%EB%8B%9B%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    유닛 테스트 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    인터페이스 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%ED%8C%A8%ED%82%A4%EC%A7%80%20%EA%B5%AC%EC%A1%B0%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    패키지 구조 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../API/Didit%20API%20Swagger/">
+<span class="md-ellipsis">
+    
+  
+    Didit API Swagger (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../API/Didit%20API/">
+<span class="md-ellipsis">
+    
+  
+    Didit Server API (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        제목
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        본문 (메인 이슈 기준)
+      
+    </span>
+</a>
+<nav aria-label="본문 (메인 이슈 기준)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-what-to-build">
+<span class="md-ellipsis">
+      
+        1) What to build (무엇을 개발하나) — 필수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-api">
+<span class="md-ellipsis">
+      
+        2) (선택) API
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-acceptance-criteria">
+<span class="md-ellipsis">
+      
+        3) Acceptance Criteria ✅ (완료조건 표) — 필수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-sub-issues">
+<span class="md-ellipsis">
+      
+        4) Sub-issues — 선택
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_4">
+<span class="md-ellipsis">
+      
+        복붙용 템플릿 (메인 이슈)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sub-issues">
+<span class="md-ellipsis">
+      
+        Sub-issues 섹션에 넣을 문구(권장)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="_1">기능 개발 이슈 컨벤션<a class="headerlink" href="#_1" title="Permanent link">¶</a></h1>
+<h3 id="_2">제목<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<p><code>[Feature][Domain] 한 줄 요약</code></p>
+<hr/>
+<h2 id="_3">본문 (메인 이슈 기준)<a class="headerlink" href="#_3" title="Permanent link">¶</a></h2>
+<h3 id="1-what-to-build">1) What to build (무엇을 개발하나) — 필수<a class="headerlink" href="#1-what-to-build" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><strong>개발 대상:</strong> 만들 기능/플로우/엔드포인트</p>
+</li>
+<li>
+<p><strong>기대 동작(플로우):</strong> 사용자/시스템이 어떻게 동작해야 하는지</p>
+</li>
+<li>
+<p><strong>제약/가정:</strong> 인증/권한/성능/운영/호환/의존성</p>
+</li>
+<li>
+<p><strong>MVP:</strong> 이번 이슈에서 반드시 되는 최소 기능(2~5 bullets)</p>
+</li>
+</ul>
+<h3 id="2-api">2) (선택) API<a class="headerlink" href="#2-api" title="Permanent link">¶</a></h3>
+<ul>
+<li>엔드포인트 목록만 간단히</li>
+</ul>
+<h3 id="3-acceptance-criteria">3) Acceptance Criteria ✅ (완료조건 표) — 필수<a class="headerlink" href="#3-acceptance-criteria" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>완료조건(측정 가능)</th>
+<th>검증 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-sub-issues">4) Sub-issues — 선택<a class="headerlink" href="#4-sub-issues" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>서브이슈는 <strong>제목만</strong> 생성해도 된다.</p>
+</li>
+<li>
+<p><strong>서브이슈 본문은 빈칸이어도 OK</strong> (필요할 때만 나중에 채운다).</p>
+</li>
+<li>
+<p>서브이슈 제목도 동일 규칙 사용: <code>[Feature][Domain] ...</code></p>
+</li>
+</ul>
+<hr/>
+<h2 id="_4">복붙용 템플릿 (메인 이슈)<a class="headerlink" href="#_4" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="gu">## What to build (무엇을 개발하나)</span>
+<span class="k">-</span><span class="w"> </span>개발 대상:
+<span class="k">-</span><span class="w"> </span>기대 동작(플로우):
+<span class="k">-</span><span class="w"> </span>제약/가정:
+<span class="k">-</span><span class="w"> </span>MVP:
+  - 
+  - 
+
+<span class="gu">## (선택) API</span>
+- 
+- 
+
+<span class="gu">## Acceptance Criteria ✅</span>
+| # | 완료조건(측정 가능) | 검증 방법 |
+|---|---|---|
+| 1 |  |  |
+| 2 |  |  |
+| 3 |  |  |
+
+<span class="gu">## Sub-issues (선택)</span>
+<span class="k">&gt; </span><span class="ge">서브이슈는 제목만 만들어도 됨 (본문 비워도 OK)</span>
+<span class="k">- [ ]</span> [<span class="nt">Feature</span>][<span class="nl">...</span>] ...
+<span class="k">- [ ]</span> [<span class="nt">Feature</span>][<span class="nl">...</span>] ...
+</code></pre></div>
+<hr/>
+<h2 id="sub-issues">Sub-issues 섹션에 넣을 문구(권장)<a class="headerlink" href="#sub-issues" title="Permanent link">¶</a></h2>
+<blockquote>
+<p>✅ <strong>서브이슈는 제목만 생성하고, 본문은 빈칸으로 둬도 OK.</strong><br/>
+논의가 필요하거나 구현 중 발견되는 요구사항만 서브이슈 본문에 추가한다.</p>
+</blockquote>
+<hr/>
+<h1 id="_5">예시<a class="headerlink" href="#_5" title="Permanent link">¶</a></h1>
+<h3 id="_6">제목<a class="headerlink" href="#_6" title="Permanent link">¶</a></h3>
+<p><code>[Feature][MVP] Auth + Rooms 기본 플로우 개발 (FR-01~03,09,11,17,19 + FR-05 최소)</code></p>
+<h2 id="what-to-build">What to build (무엇을 개발하나)<a class="headerlink" href="#what-to-build" title="Permanent link">¶</a></h2>
+<ul>
+<li>개발 대상:</li>
+<li>로그인/로그아웃 + 방 목록/생성 + 초대코드 생성/참여 + 참여자 목록 조회까지 “최소 사용 가능” 플로우를 개발한다.</li>
+<li>기대 동작(플로우):
+  1) 사용자가 로그인하면 사이드바에 방 리스트가 표시된다(없으면 빈 상태).
+  2) 사용자가 방을 생성하면 즉시 방 리스트에 반영된다.
+  3) 사용자가 초대 코드를 생성하고, 다른 계정이 해당 코드로 join 할 수 있다.
+  4) 사용자가 방 참여자 목록을 조회할 수 있다.</li>
+<li>제약/가정(인증/권한/성능/운영/의존성):</li>
+<li>인증은 세션/쿠키 기반으로 동작한다(로그인 시 세션 생성, 로그아웃 시 만료).</li>
+<li>로그인 사용자만 방 목록/생성/초대/참여/참여자 조회 가능(최소 권한).</li>
+<li>FE 연동을 위해 성공/실패 응답이 일관된 형태로 전달되어야 한다(최소: HTTP Status + message 또는 code).</li>
+<li>MVP(이번 이슈에서 반드시 되는 최소 범위):</li>
+<li>FR-01~03, FR-09, FR-11, FR-17, FR-19 + FR-05(최소)</li>
+<li>아래 API가 동작하고, FE에서 DoD 시나리오가 수행 가능해야 한다.</li>
+</ul>
+<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">¶</a></h2>
+<ul>
+<li>GET /api/v1/auth/login</li>
+<li>POST /api/v1/auth/logout</li>
+<li>GET /api/v1/rooms</li>
+<li>POST /api/v1/rooms</li>
+<li>GET /api/v1/rooms/{id}/participants</li>
+<li>POST /api/v1/rooms/{id}/invites</li>
+<li>POST /api/v1/rooms/join/{inviteCode}</li>
+</ul>
+<h2 id="acceptance-criteria">Acceptance Criteria ✅<a class="headerlink" href="#acceptance-criteria" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>완료조건(측정 가능)</th>
+<th>검증 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>로그인 성공 후 사이드바에 방 리스트가 표시된다(빈 목록도 정상).</td>
+<td>로그인 후 UI 확인 + GET /rooms 200</td>
+</tr>
+<tr>
+<td>2</td>
+<td>방 생성 후 즉시 목록에 반영된다(생성 직후 재조회로 확인 가능).</td>
+<td>POST /rooms 성공 → GET /rooms에 생성된 방 포함</td>
+</tr>
+<tr>
+<td>3</td>
+<td>초대 코드/링크 생성이 가능하고 inviteCode(또는 링크 구성 값)를 반환한다.</td>
+<td>POST /rooms/{id}/invites 201 + inviteCode 확인</td>
+</tr>
+<tr>
+<td>4</td>
+<td>다른 계정으로 inviteCode를 사용해 join이 성공하고 방 참여 상태가 된다.</td>
+<td>다른 계정 로그인 → POST /rooms/join/{inviteCode} 성공 → 참여 확인</td>
+</tr>
+<tr>
+<td>5</td>
+<td>방 참여자 목록 조회가 가능하고 참여자 리스트에 본인이 포함된다.</td>
+<td>GET /rooms/{id}/participants 200 + 리스트 확인</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sub-issues_1">Sub-issues<a class="headerlink" href="#sub-issues_1" title="Permanent link">¶</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Auth] 로그인 플로우 구현 (GET /api/v1/auth/login)</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Auth] 로그아웃 구현 (POST /api/v1/auth/logout)</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Rooms] 방 목록 조회 + 사이드바 연동 (GET /api/v1/rooms)</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Rooms] 방 생성 + 생성 즉시 목록 반영 (POST /api/v1/rooms)</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Invites] 초대 코드/링크 생성 (POST /api/v1/rooms/{id}/invites)</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Join] 초대 코드로 방 참여 (POST /api/v1/rooms/join/{inviteCode})</code></li>
+<li class="task-list-item"><label class="task-list-control"><input disabled="" type="checkbox"><span class="task-list-indicator"></span></input></label> <code>[Feature][Participants] 방 참여자 목록 조회 (GET /api/v1/rooms/{id}/participants)</code></li>
+</ul>
+<hr/>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../javascripts/ngrok-swagger-patch.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="../../javascripts/mermaid.mjs" type="module"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../assets/javascripts/panzoom.min.js"></script>
+<script src="../../assets/javascripts/zoompan.js"></script>
+<script>document$.subscribe(() => {
+            const dark_scheme_name = "slate"
+            
+            window.scheme = document.body.getAttribute("data-md-color-scheme")
+            const options = {
+                attributeFilter: ['data-md-color-scheme'],
+            };
+            function color_scheme_callback(mutations) {
+                for (let mutation of mutations) {
+                    if (mutation.attributeName === "data-md-color-scheme") {
+                        scheme = document.body.getAttribute("data-md-color-scheme")
+                        var iframe_list = document.getElementsByClassName("redoc-iframe")
+                        for(var i = 0; i < iframe_list.length; i++) {
+                            var ele = iframe_list.item(i);
+                            if (ele) {
+                                if (scheme === dark_scheme_name) {
+                                    ele.contentWindow.enable_dark_mode();
+                                } else {
+                                    ele.contentWindow.disable_dark_mode();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            observer = new MutationObserver(color_scheme_callback);
+            observer.observe(document.body, options);
+            })</script></body>
+</html>

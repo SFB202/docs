@@ -1,0 +1,1403 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="../%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EC%BB%A8%EB%B2%A4%EC%85%98/" rel="prev"/>
+<link href="../%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%BB%A8%EB%B2%A4%EC%85%98/" rel="next"/>
+<link href="../../feed_rss_created.xml" rel="alternate" title="RSS feed" type="application/rss+xml"/>
+<link href="../../feed_rss_updated.xml" rel="alternate" title="RSS feed of updated content" type="application/rss+xml"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>유닛 테스트 컨벤션 - 개발 문서</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/stylesheets/panzoom.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".mermaid", "img", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<body data-md-color-accent="amber" data-md-color-primary="brown" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#_1">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="개발 문서" class="md-header__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            개발 문서
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              유닛 테스트 컨벤션
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="다크 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="brown" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="다크 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"></path></svg>
+</label>
+<input aria-label="라이트 모드로 전환" class="md-option" data-md-color-accent="amber" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="brown" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="라이트 모드로 전환">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EA%B8%B0%ED%9A%8D/">
+          
+  
+  
+  기획
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../%EC%84%A4%EA%B3%84/">
+          
+  
+  
+  설계
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../">
+          
+  
+  
+  컨벤션
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../API/Didit%20API%20Swagger/">
+          
+  
+  
+  API
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="개발 문서" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="개발 문서">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    개발 문서
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    기획
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    기획
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/API%20DOC%20-%20%EA%B8%B0%ED%9A%8D/">
+<span class="md-ellipsis">
+    
+  
+    API DOC   기획
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    ERD
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    ERD
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/ERD/Logical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Logical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    요구사항
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    요구사항
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/Feature%20Request%20Table/">
+<span class="md-ellipsis">
+    
+  
+    Feature Request Table
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%281%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (1차)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EA%B8%B0%ED%9A%8D/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%282%EC%B0%A8%29/">
+<span class="md-ellipsis">
+    
+  
+    요구사항 (2차)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    설계
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    설계
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Architecture/">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/MileStone/">
+<span class="md-ellipsis">
+    
+  
+    MileStone
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../%EC%84%A4%EA%B3%84/Physical%20ERD%20Model/">
+<span class="md-ellipsis">
+    
+  
+    Physical ERD Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    컨벤션
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    컨벤션
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Git%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    Git 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Result%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Result 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../SSE/">
+<span class="md-ellipsis">
+    
+  
+    Spring MVC SSE 아키텍처/컨벤션/사용설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Spring%20Validation%20%EC%BB%A8%EB%B2%A4%EC%85%98%20%26%20%EC%82%AC%EC%9A%A9%20%EC%84%A4%EB%AA%85%EC%84%9C/">
+<span class="md-ellipsis">
+    
+  
+    Spring Validation 컨벤션 &amp; 사용 설명서
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EB%B0%9C%20%EC%9D%B4%EC%8A%88%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    기능 개발 이슈 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    네이밍 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    유닛 테스트 컨벤션
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    유닛 테스트 컨벤션
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1">
+<span class="md-ellipsis">
+      
+        1) 테스트 범위 정의
+      
+    </span>
+</a>
+<nav aria-label="1) 테스트 범위 정의" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-test">
+<span class="md-ellipsis">
+      
+        Unit Test가 다루는 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-test_1">
+<span class="md-ellipsis">
+      
+        Unit Test가 다루지 않는 것
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2">
+<span class="md-ellipsis">
+      
+        2) 디렉토리/클래스/메서드 네이밍
+      
+    </span>
+</a>
+<nav aria-label="2) 디렉토리/클래스/메서드 네이밍" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        위치
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        클래스명
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_4">
+<span class="md-ellipsis">
+      
+        테스트 메서드명(필수)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-given-when-then">
+<span class="md-ellipsis">
+      
+        3) 테스트 구조 (Given / When / Then 고정)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-resultt-contract">
+<span class="md-ellipsis">
+      
+        4) Result&lt;T&gt; 계약(Contract) 기반 테스트 규칙 — 핵심
+      
+    </span>
+</a>
+<nav aria-label="4) Result&lt;T&gt; 계약(Contract) 기반 테스트 규칙 — 핵심" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41">
+<span class="md-ellipsis">
+      
+        4.1 메서드별 최소 테스트 수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42">
+<span class="md-ellipsis">
+      
+        4.2 성공 케이스에서 반드시 검증할 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43">
+<span class="md-ellipsis">
+      
+        4.3 실패 케이스에서 반드시 검증할 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-list">
+<span class="md-ellipsis">
+      
+        4.4 복수 에러(List) 가능 시 규칙
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-fixture-monkey">
+<span class="md-ellipsis">
+      
+        5) Fixture Monkey 컨벤션
+      
+    </span>
+</a>
+<nav aria-label="5) Fixture Monkey 컨벤션" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51">
+<span class="md-ellipsis">
+      
+        5.1 기본 설정
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52">
+<span class="md-ellipsis">
+      
+        5.2 생성 원칙
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-mockito">
+<span class="md-ellipsis">
+      
+        6) Mockito(의존성) 컨벤션
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7">
+<span class="md-ellipsis">
+      
+        7) 금지/권장 사항
+      
+    </span>
+</a>
+<nav aria-label="7) 금지/권장 사항" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_5">
+<span class="md-ellipsis">
+      
+        금지
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_6">
+<span class="md-ellipsis">
+      
+        권장
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8">
+<span class="md-ellipsis">
+      
+        8) 리뷰 체크리스트(통과 기준)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    인터페이스 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../%ED%8C%A8%ED%82%A4%EC%A7%80%20%EA%B5%AC%EC%A1%B0%20%EC%BB%A8%EB%B2%A4%EC%85%98/">
+<span class="md-ellipsis">
+    
+  
+    패키지 구조 컨벤션
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../API/Didit%20API%20Swagger/">
+<span class="md-ellipsis">
+    
+  
+    Didit API Swagger (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../API/Didit%20API/">
+<span class="md-ellipsis">
+    
+  
+    Didit Server API (2026 - 02 - 05 저녁)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1">
+<span class="md-ellipsis">
+      
+        1) 테스트 범위 정의
+      
+    </span>
+</a>
+<nav aria-label="1) 테스트 범위 정의" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-test">
+<span class="md-ellipsis">
+      
+        Unit Test가 다루는 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unit-test_1">
+<span class="md-ellipsis">
+      
+        Unit Test가 다루지 않는 것
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2">
+<span class="md-ellipsis">
+      
+        2) 디렉토리/클래스/메서드 네이밍
+      
+    </span>
+</a>
+<nav aria-label="2) 디렉토리/클래스/메서드 네이밍" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_2">
+<span class="md-ellipsis">
+      
+        위치
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_3">
+<span class="md-ellipsis">
+      
+        클래스명
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_4">
+<span class="md-ellipsis">
+      
+        테스트 메서드명(필수)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-given-when-then">
+<span class="md-ellipsis">
+      
+        3) 테스트 구조 (Given / When / Then 고정)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-resultt-contract">
+<span class="md-ellipsis">
+      
+        4) Result&lt;T&gt; 계약(Contract) 기반 테스트 규칙 — 핵심
+      
+    </span>
+</a>
+<nav aria-label="4) Result&lt;T&gt; 계약(Contract) 기반 테스트 규칙 — 핵심" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41">
+<span class="md-ellipsis">
+      
+        4.1 메서드별 최소 테스트 수
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42">
+<span class="md-ellipsis">
+      
+        4.2 성공 케이스에서 반드시 검증할 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43">
+<span class="md-ellipsis">
+      
+        4.3 실패 케이스에서 반드시 검증할 것
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-list">
+<span class="md-ellipsis">
+      
+        4.4 복수 에러(List) 가능 시 규칙
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-fixture-monkey">
+<span class="md-ellipsis">
+      
+        5) Fixture Monkey 컨벤션
+      
+    </span>
+</a>
+<nav aria-label="5) Fixture Monkey 컨벤션" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51">
+<span class="md-ellipsis">
+      
+        5.1 기본 설정
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52">
+<span class="md-ellipsis">
+      
+        5.2 생성 원칙
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-mockito">
+<span class="md-ellipsis">
+      
+        6) Mockito(의존성) 컨벤션
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7">
+<span class="md-ellipsis">
+      
+        7) 금지/권장 사항
+      
+    </span>
+</a>
+<nav aria-label="7) 금지/권장 사항" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_5">
+<span class="md-ellipsis">
+      
+        금지
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#_6">
+<span class="md-ellipsis">
+      
+        권장
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8">
+<span class="md-ellipsis">
+      
+        8) 리뷰 체크리스트(통과 기준)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="_1">유닛 테스트 컨벤션<a class="headerlink" href="#_1" title="Permanent link">¶</a></h1>
+<h2 id="1">1) 테스트 범위 정의<a class="headerlink" href="#1" title="Permanent link">¶</a></h2>
+<h3 id="unit-test">Unit Test가 다루는 것<a class="headerlink" href="#unit-test" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><strong>Service / Domain / Policy / Validator</strong> 등 <em>비즈니스 로직</em> 검증</p>
+</li>
+<li>
+<p>외부 의존성(Repository, Encoder, 외부 Client 등)은 <strong>Mock</strong>으로 대체</p>
+</li>
+</ul>
+<h3 id="unit-test_1">Unit Test가 다루지 않는 것<a class="headerlink" href="#unit-test_1" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>DB/네트워크/파일/메시지 브로커 등 I/O</p>
+</li>
+<li>
+<p>Spring Context 로딩 / Security 필터 체인</p>
+</li>
+<li>
+<p>위는 통합/슬라이스 테스트로 분리</p>
+</li>
+</ul>
+<hr/>
+<h2 id="2">2) 디렉토리/클래스/메서드 네이밍<a class="headerlink" href="#2" title="Permanent link">¶</a></h2>
+<h3 id="_2">위치<a class="headerlink" href="#_2" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>src/test/java</code>에서 운영 코드 패키지 구조를 그대로 미러링</li>
+</ul>
+<h3 id="_3">클래스명<a class="headerlink" href="#_3" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>{TargetClass}Test</code> (예: <code>UserServiceImplTest</code>)</p>
+</li>
+<li>
+<p>클래스 <code>@DisplayName("... 유닛 테스트")</code> 권장</p>
+</li>
+</ul>
+<h3 id="_4">테스트 메서드명(필수)<a class="headerlink" href="#_4" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>“메서드 + 조건 + 결과(Result 상태/에러)”가 드러나야 한다.</p>
+</li>
+<li>
+<p>예시</p>
+<ul>
+<li>
+<p><code>createUser_newLoginId_returnsOk()</code></p>
+</li>
+<li>
+<p><code>createUser_duplicateLoginId_returnsFailConflict()</code></p>
+</li>
+<li>
+<p><code>loginUser_wrongPassword_returnsFailNotFound()</code> (정책에 맞게)</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><code>@DisplayName</code>에는 “시나리오 설명 + 기대 결과”를 문장으로 적는다.</p>
+</blockquote>
+<hr/>
+<h2 id="3-given-when-then">3) 테스트 구조 (Given / When / Then 고정)<a class="headerlink" href="#3-given-when-then" title="Permanent link">¶</a></h2>
+<p>모든 테스트는 순서를 강제한다.</p>
+<ol>
+<li>
+<p><strong>Given</strong>: fixture 생성 + mock stub</p>
+</li>
+<li>
+<p><strong>When</strong>: SUT 호출</p>
+</li>
+<li>
+<p><strong>Then</strong>: Result 계약(성공/실패) + 값/에러 + 필요 시 상호작용 검증</p>
+</li>
+</ol>
+<hr/>
+<h2 id="4-resultt-contract">4) <code>Result&lt;T&gt;</code> 계약(Contract) 기반 테스트 규칙 — 핵심<a class="headerlink" href="#4-resultt-contract" title="Permanent link">¶</a></h2>
+<p>너의 <code>Result&lt;T&gt;</code>는 아래 계약을 가진다.</p>
+<ul>
+<li>
+<p>성공:</p>
+<ul>
+<li>
+<p><code>result.isSuccess() == true</code></p>
+</li>
+<li>
+<p><code>result.isFailure() == false</code></p>
+</li>
+<li>
+<p><code>errors.isEmpty() == true</code></p>
+</li>
+<li>
+<p>값이 있는 타입이면 <code>getValue().isPresent() == true</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>실패:</p>
+<ul>
+<li>
+<p><code>result.isFailure() == true</code></p>
+</li>
+<li>
+<p><code>errors.size() &gt;= 1</code></p>
+</li>
+<li>
+<p><code>value == null</code>(직접 접근 불가면 <code>getValue().isEmpty()</code>로 검증)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="41">4.1 메서드별 최소 테스트 수<a class="headerlink" href="#41" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>성공 케이스 <strong>최소 1개</strong></p>
+</li>
+<li>
+<p>실패 케이스는 <strong>실패 분기(에러 상황) 1개당 1개씩</strong></p>
+<ul>
+<li>예: <code>NotFound</code>, <code>Conflict</code>, <code>Validation</code>, <code>Forbidden</code> 등</li>
+</ul>
+</li>
+</ul>
+<h3 id="42">4.2 성공 케이스에서 반드시 검증할 것<a class="headerlink" href="#42" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p><code>assertTrue(result.isSuccess())</code></p>
+</li>
+<li>
+<p><code>assertTrue(result.getErrors().isEmpty())</code></p>
+</li>
+<li>
+<p>값 검증(가능하면 핵심 필드 비교, <code>toString()</code> 비교 지양)</p>
+<ul>
+<li><code>assertEquals(expectedId, result.getValue().orElseThrow())</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="43">4.3 실패 케이스에서 반드시 검증할 것<a class="headerlink" href="#43" title="Permanent link">¶</a></h3>
+<p>실패 테스트는 “실패하면 어떤 에러가 있는지”를 고정해야 한다.</p>
+<ul>
+<li>
+<p><code>assertTrue(result.isFailure())</code></p>
+</li>
+<li>
+<p><code>assertNotNull(result.getErrors())</code></p>
+</li>
+<li>
+<p><code>assertFalse(result.getErrors().isEmpty())</code></p>
+</li>
+<li>
+<p>첫 에러(또는 특정 에러)에 대해 아래 중 <strong>최소 2개 이상</strong>을 검증:</p>
+<ol>
+<li>
+<p><code>error.getCode()</code> 또는 <code>error.getStatus()</code> (권장 최우선)</p>
+</li>
+<li>
+<p><code>error.getMetadata()</code>의 key 존재/값 일치(가능하면)</p>
+</li>
+<li>
+<p>에러 타입(class) 고정이 필요하면 <code>assertInstanceOf(...)</code></p>
+</li>
+<li>
+<p><code>message</code>는 전체 문자열 고정 금지(필요 시 contains 정도만)</p>
+</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>권장 우선순위: <strong>(1) code/status → (2) metadata → (3) type → (4) message</strong></p>
+</blockquote>
+<h3 id="44-list">4.4 복수 에러(List) 가능 시 규칙<a class="headerlink" href="#44-list" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>에러 “순서”에 의존하지 말 것</p>
+</li>
+<li>
+<p><code>stream().anyMatch(...)</code> 또는 <code>contains</code> 기반으로 검증</p>
+</li>
+<li>
+<p>최소 1개 테스트는 “에러 개수 + 특정 code 포함”을 검증</p>
+</li>
+</ul>
+<hr/>
+<h2 id="5-fixture-monkey">5) Fixture Monkey 컨벤션<a class="headerlink" href="#5-fixture-monkey" title="Permanent link">¶</a></h2>
+<h3 id="51">5.1 기본 설정<a class="headerlink" href="#51" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>FixtureMonkey.builder().defaultNotNull(true).build()</code> 사용 OK</li>
+</ul>
+<h3 id="52">5.2 생성 원칙<a class="headerlink" href="#52" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>분기/조회에 영향을 주는 핵심 필드는 <strong>랜덤 금지</strong></p>
+<ul>
+<li>예: <code>loginId</code>, <code>userId</code>, <code>roomId</code> 같은 repository 조회 키</li>
+</ul>
+</li>
+<li>
+<p>실패 케이스는 “분기 조건 필드만 의도적으로 깨기”</p>
+<ul>
+<li>예: 존재하지 않는 ID, 중복 키, 잘못된 비밀번호 등</li>
+</ul>
+</li>
+<li>
+<p>비교는 <code>toString()</code>보다 <strong>id/핵심 필드</strong> 비교</p>
+</li>
+</ul>
+<hr/>
+<h2 id="6-mockito">6) Mockito(의존성) 컨벤션<a class="headerlink" href="#6-mockito" title="Permanent link">¶</a></h2>
+<ul>
+<li>
+<p>Mock 대상: 외부 의존성만</p>
+</li>
+<li>
+<p>Stub: 필요한 값만 최소 지정</p>
+</li>
+<li>
+<p>Verify(선택):</p>
+<ul>
+<li>
+<p>성공 케이스: 중요한 저장/호출이 발생했는지</p>
+</li>
+<li>
+<p>실패 케이스: <strong>부수효과가 발생하지 않는지</strong>가 중요</p>
+<ul>
+<li>예: 중복이면 <code>save</code> 호출 X → <code>verify(repo, never()).save(any())</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="7">7) 금지/권장 사항<a class="headerlink" href="#7" title="Permanent link">¶</a></h2>
+<h3 id="_5">금지<a class="headerlink" href="#_5" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>❌ 스프링 컨텍스트 로딩하는 유닛 테스트</p>
+</li>
+<li>
+<p>❌ 성공인데 <code>errors</code> 비었는지 확인 안 함</p>
+</li>
+<li>
+<p>❌ 실패인데 “에러 타입만” 확인하고 code/status 검증 안 함</p>
+</li>
+<li>
+<p>❌ 랜덤 데이터가 분기에 영향을 주는데 통제하지 않음</p>
+</li>
+<li>
+<p>❌ 객체 비교를 <code>toString()</code>으로만 하는 것(가능한 경우)</p>
+</li>
+</ul>
+<h3 id="_6">권장<a class="headerlink" href="#_6" title="Permanent link">¶</a></h3>
+<ul>
+<li>
+<p>✅ 실패 테스트는 <code>code/status + (metadata 또는 type)</code>까지 고정</p>
+</li>
+<li>
+<p>✅ 실패 케이스에서 중요하면 <code>never()</code>로 side effect 방지 검증</p>
+</li>
+<li>
+<p>✅ 메시지는 전체 고정 대신 contains(문구 변경에 강함)</p>
+</li>
+</ul>
+<hr/>
+<h2 id="8">8) 리뷰 체크리스트(통과 기준)<a class="headerlink" href="#8" title="Permanent link">¶</a></h2>
+<ul>
+<li>
+<p>각 기능(메서드)마다 Success 1개 이상 있는가?</p>
+</li>
+<li>
+<p>실패 분기마다 테스트가 있고, “어떤 에러인지(code/status/metadata)”가 고정되는가?</p>
+</li>
+<li>
+<p><code>Result</code> 계약(성공이면 errors empty / 실패면 errors non-empty)을 항상 검증하는가?</p>
+</li>
+<li>
+<p>FixtureMonkey 랜덤이 분기에 영향 주지 않게 핵심 필드를 통제했는가?</p>
+</li>
+<li>
+<p>필요한 경우 실패 시 부수효과 없음(never) 검증이 있는가?</p>
+</li>
+</ul>
+<hr/>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../javascripts/ngrok-swagger-patch.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="../../javascripts/mermaid.mjs" type="module"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="../../assets/javascripts/panzoom.min.js"></script>
+<script src="../../assets/javascripts/zoompan.js"></script>
+<script>document$.subscribe(() => {
+            const dark_scheme_name = "slate"
+            
+            window.scheme = document.body.getAttribute("data-md-color-scheme")
+            const options = {
+                attributeFilter: ['data-md-color-scheme'],
+            };
+            function color_scheme_callback(mutations) {
+                for (let mutation of mutations) {
+                    if (mutation.attributeName === "data-md-color-scheme") {
+                        scheme = document.body.getAttribute("data-md-color-scheme")
+                        var iframe_list = document.getElementsByClassName("redoc-iframe")
+                        for(var i = 0; i < iframe_list.length; i++) {
+                            var ele = iframe_list.item(i);
+                            if (ele) {
+                                if (scheme === dark_scheme_name) {
+                                    ele.contentWindow.enable_dark_mode();
+                                } else {
+                                    ele.contentWindow.disable_dark_mode();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            observer = new MutationObserver(color_scheme_callback);
+            observer.observe(document.body, options);
+            })</script></body>
+</html>
