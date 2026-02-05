@@ -1,33 +1,57 @@
-# Didit API (v2026-02-02)
+# Didit Server API (2026 - 02 - 05)
 
-Base path: `/api/v1` (기본 포트: `8080`)
+기본 Base path: `/api/v1` (기본 포트: `8080`)
 
-## 인증 (Authentication)
+## 인증(Authentication)
 
-이 서버는 Spring Security OAuth2(GitHub)를 사용하며, 세션 쿠키(`JSESSIONID`)로 인증합니다.
+이 서버는 **Spring Security OAuth2(깃허브)** 를 사용하며, **세션 쿠키(`JSESSIONID`)** 기반 인증을 사용합니다.
 
-- `GET /api/v1/auth/login`: GitHub OAuth 인가로 리다이렉트합니다 (`/oauth2/authorization/github`).
+- `GET /api/v1/auth/login`: GitHub OAuth 인가 페이지(`/oauth2/authorization/github`)로 리다이렉트합니다.
     
-- `POST /api/v1/auth/logout`: 세션을 무효화하고 `JSESSIONID` 쿠키를 삭제합니다 (`SecurityConfig`에 설정).
+- `POST /api/v1/auth/logout`: 세션을 무효화하고 `JSESSIONID` 쿠키를 제거합니다.
     
-- `GET /api/v1/auth/me`: 인증된 사용자 정보를 반환합니다 (`UserResponse`).
+- `GET /api/v1/auth/me`: 로그인된 사용자 정보를 반환합니다(`UserResponse`).
     
 
-기본적으로 모든 엔드포인트는 인증이 필요하며, 아래 경로만 예외로 인증 없이 접근 가능합니다:  
-`/`, `/api/v1/auth/login`, `/api/v1/auth/logout`, `/login/**`, `/oauth2/**`, `/error`.
+기본적으로 모든 엔드포인트는 인증이 필요합니다. 단, 아래 경로는 예외적으로 인증 없이 접근 가능합니다:
 
-## 컨벤션 (Conventions)
+- `/`
+    
+- `/openapi.yaml`
+    
+- `/swagger-ui.html`
+    
+- `/swagger-ui/**`
+    
+- `/v3/api-docs/swagger-config`
+    
+- `/api/v1/auth/login`
+    
+- `/api/v1/auth/logout`
+    
+- `/login/**`
+    
+- `/oauth2/**`
+    
+- `/error`
+    
+- `/api/v1/webhooks/openvidu`
+    
 
-- 요청/응답 바디: JSON (별도 표기 없는 경우)
+---
+
+## 규칙(Conventions)
+
+- 요청/응답 본문: JSON (별도 언급이 없으면)
     
 - 타임스탬프: ISO-8601 `LocalDateTime` (예: `2026-01-26T14:30:00`)
     
-- 페이지네이션: Spring `Pageable` 파라미터 (`page`, `size`, `sort`)
+- 페이지네이션: Spring `Pageable` 파라미터(`page`, `size`, `sort`)
     
-- 커서: 일부 엔드포인트는 이전 페이지의 마지막 아이템 id를 `lastId` 또는 `cursor`로 받습니다.
+- 커서 기반: 일부 엔드포인트는 이전 페이지의 마지막 아이템 id로 `lastId` 또는 `cursor`를 받습니다.
     
 
-### Enums
+### Enum
 
 - `MeetingMode`: `CHAT | VOICE`
     
@@ -40,20 +64,22 @@ Base path: `/api/v1` (기본 포트: `8080`)
 - `MessageType`: `TEXT | SYSTEM`
     
 
-### 에러 응답 (Error response)
+### 에러 응답(Error response)
 
-대부분의 엔드포인트는 에러 바디를 `ErrorResponse` 형태로 반환합니다:
+대부분의 엔드포인트는 에러 발생 시 `ErrorResponse` 형태로 응답 본문을 반환합니다.
 
 ```json
 {
-  "statusCode": "NOT_FOUND",
-  "message": "..."
+  "StatusCode": "NOT_FOUND",
+  "Message": "..."
 }
 ```
 
-HTTP 상태 코드도 `statusCode`에 대응되는 값으로 설정됩니다.
+HTTP 상태 코드도 위 `StatusCode`에 맞춰 설정됩니다.
 
-## 스키마 (Schemas, response)
+---
+
+## 스키마(응답)
 
 ### ProjectResponse
 
@@ -146,11 +172,35 @@ HTTP 상태 코드도 `statusCode`에 대응되는 값으로 설정됩니다.
 }
 ```
 
-## 엔드포인트 (Endpoints)
+### AiResponse
 
-### Auth
+```json
+{
+  "issueId": 100,
+  "title": "Fix bug",
+  "body": "...",
+  "status": "OPEN",
+  "priority": "MEDIUM",
+  "assigneeIds": [10, 11]
+}
+```
 
-#### `GET /api/v1/auth/login`
+### GithubRepoResponse
+
+```json
+{
+  "repoId": 123456,
+  "repoName": "org/repo"
+}
+```
+
+---
+
+## 엔드포인트(Endpoints)
+
+## Auth
+
+### `GET /api/v1/auth/login`
 
 GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 
@@ -159,16 +209,16 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 - `302 Found` + `Location: /oauth2/authorization/github`
     
 
-#### `POST /api/v1/auth/logout`
+### `POST /api/v1/auth/logout`
 
-로그아웃합니다(세션 무효화; `JSESSIONID` 삭제).
+로그아웃합니다(세션 무효화 + `JSESSIONID` 제거).
 
 응답:
 
-- `302 Found`로 `/` 리다이렉트 (현재 설정)
+- `200 OK` (빈 본문)
     
 
-#### `GET /api/v1/auth/me`
+### `GET /api/v1/auth/me`
 
 현재 인증된 사용자 정보를 반환합니다.
 
@@ -176,23 +226,27 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 
 - `200 OK` -> `UserResponse`
     
+- 로그인 상태가 아니면 `401 Unauthorized`
+    
 
-### Projects
+---
 
-#### `GET /api/v1/projects`
+## Projects
 
-인증된 사용자의 프로젝트 목록을 조회합니다.
+### `GET /api/v1/projects`
+
+현재 로그인한 사용자가 속한 프로젝트 목록을 반환합니다.
 
 응답:
 
 - `200 OK` -> `ProjectResponse[]`
     
 
-#### `POST /api/v1/projects`
+### `POST /api/v1/projects`
 
 프로젝트를 생성하고, 생성자를 `ADMIN`으로 등록합니다.
 
-요청 바디:
+요청 본문:
 
 ```json
 {
@@ -201,50 +255,154 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 }
 ```
 
-비고:
+참고:
 
-- 검증: `projectName` 최대 64자, `githubUrl`은 유효한 URL이어야 함
+- 검증: `projectName` 최대 64자, `githubUrl`은 올바른 URL이어야 함
     
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-#### `GET /api/v1/projects/{projectId}`
+### `GET /api/v1/projects/{projectId}`
 
-프로젝트 상세를 조회합니다(또한 인증된 사용자 기준 최근 조회 기록을 갱신합니다).
+프로젝트 상세를 조회합니다. (동시에 해당 사용자의 최근 조회 목록도 업데이트합니다.)
 
 응답:
 
 - `200 OK` -> `ProjectResponse`
     
 
-#### `GET /api/v1/projects/recents`
+### `GET /api/v1/projects/recents`
 
-인증된 사용자의 최근 조회 프로젝트를 최대 4개까지 조회합니다.
+현재 사용자의 최근 조회 프로젝트를 최대 4개까지 반환합니다.
 
 응답:
 
 - `200 OK` -> `ProjectRecentResponse[]`
     
 
-#### `GET /api/v1/projects/{projectId}/participants`
+### `GET /api/v1/projects/{projectId}/participants`
 
-프로젝트 참가자 목록을 조회합니다.
+프로젝트 참여자 목록을 반환합니다.
 
 응답:
 
 - `200 OK` -> `UserResponse[]`
     
 
-### Invites
+### `DELETE /api/v1/projects/{projectId}`
 
-#### `POST /api/v1/projects/invites`
+프로젝트를 삭제합니다(소유자만 가능).
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `DELETE /api/v1/projects/{projectId}/leave`
+
+프로젝트에서 탈퇴합니다.
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `DELETE /api/v1/projects/{projectId}/participants/{userId}`
+
+프로젝트 참여자를 제거합니다(소유자만 가능).
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `POST /api/v1/projects/{projectId}/github/validate`
+
+프로젝트의 GitHub 저장소 정보가 유효한지 검증합니다.
+
+요청 본문:
+
+```json
+{
+  "orgName": "org",
+  "repoName": "repo"
+}
+```
+
+응답:
+
+- `200 OK` -> `GithubRepoResponse`
+    
+
+### `PATCH /api/v1/projects/{projectId}`
+
+프로젝트의 저장소 정보를 갱신합니다.
+
+요청 본문:
+
+```json
+{
+  "repoId": 123456,
+  "repoFullName": "org/repo"
+}
+```
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `PATCH /api/v1/projects/{projectId}/owner`
+
+프로젝트 소유권을 이전합니다.
+
+요청 본문:
+
+```json
+{
+  "newOwnerId": 99
+}
+```
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `PATCH /api/v1/projects/{projectId}/name`
+
+프로젝트 이름을 변경합니다.
+
+요청 본문:
+
+```json
+{
+  "name": "new-project-name"
+}
+```
+
+참고:
+
+- 검증: `name`은 필수이며 최대 100자
+    
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+---
+
+## Invites
+
+### `POST /api/v1/projects/invites`
 
 프로젝트 초대 코드를 생성합니다(관리자만 가능).
 
-요청 바디:
+요청 본문:
 
 ```json
 {
@@ -253,9 +411,9 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 }
 ```
 
-비고:
+참고:
 
-- `expireDate`는 선택값이며, 생략 시 서버가 매우 먼 미래로 설정합니다.
+- `expireDate`는 선택값이며, 생략하면 서버가 매우 먼 미래로 만료일을 설정합니다.
     
 
 응답:
@@ -267,35 +425,37 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 ```
 
-#### `GET /api/v1/projects/invites/{inviteCode}`
+### `GET /api/v1/projects/invites/{inviteCode}`
 
-초대 코드로 프로젝트를 조회합니다.
+초대 코드로 프로젝트 정보를 조회합니다.
 
 응답:
 
 - `200 OK` -> `ProjectResponse`
     
-- `400 Bad Request`: `inviteCode`가 UUID 형식이 아닐 때
+- `inviteCode`가 UUID 형식이 아니면 `400 Bad Request`
     
 
-#### `POST /api/v1/projects/invites/{inviteCode}`
+### `POST /api/v1/projects/invites/{inviteCode}`
 
-초대 코드로 프로젝트에 참여합니다.
+초대 코드를 사용해 프로젝트에 참여합니다.
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
-- `400 Bad Request`: `inviteCode`가 UUID 형식이 아닐 때
+- `inviteCode`가 UUID 형식이 아니면 `400 Bad Request`
     
 
-### Meetings (Channels)
+---
 
-#### `POST /api/v1/projects/{projectId}/add-channel`
+## Meetings (Channels)
 
-프로젝트에 미팅(채널)을 생성합니다.
+### `POST /api/v1/projects/{projectId}/add-channel`
 
-요청 바디:
+프로젝트에 회의(채널)를 생성합니다(관리자만 가능). 생성 시 상태는 `RUNNING`입니다.
+
+요청 본문:
 
 ```json
 {
@@ -306,18 +466,18 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 
 응답:
 
-- `200 OK` -> 생성된 미팅 id
+- `200 OK` -> 생성된 meeting id
     
 
 ```json
 123
 ```
 
-#### `POST /api/v1/projects/{projectId}/book-channel`
+### `POST /api/v1/projects/{projectId}/book-channel`
 
-프로젝트에 미팅(채널)을 예약합니다.
+프로젝트에 회의(채널)를 예약합니다(관리자만 가능). 생성 시 상태는 `SCHEDULED`, 모드는 `VOICE`입니다.
 
-요청 바디:
+요청 본문:
 
 ```json
 {
@@ -327,45 +487,43 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 }
 ```
 
-비고:
+참고:
 
 - 검증: `title` 최대 50자, `start`/`end`는 미래 시간이어야 함
     
-- 서버는 `start`가 `end`보다 늦으면 요청을 거부합니다.
-    
-- 미팅은 `status = SCHEDULED`, `mode = VOICE`로 저장됩니다(현재 구현 기준).
+- `start`가 `end`보다 늦으면 서버가 요청을 거부합니다.
     
 
 응답:
 
-- `200 OK` -> 생성된 미팅 id
+- `200 OK` -> 생성된 meeting id
     
 
 ```json
 456
 ```
 
-#### `GET /api/v1/projects/{projectId}/channels`
+### `GET /api/v1/projects/{projectId}/channels`
 
-프로젝트 내 미팅(채널) 목록을 조회합니다.
+프로젝트의 회의(채널) 목록을 조회합니다.
 
 쿼리 파라미터:
 
-- `status` (선택): `SCHEDULED | RUNNING | ENDED`
+- `status`(선택): `SCHEDULED | RUNNING | ENDED`
     
-- `cursor` (권장): 이전 페이지 마지막 아이템 id (첫 페이지는 `0`)
+- `cursor`(권장): 이전 페이지 마지막 항목 id (첫 페이지는 `0`)
     
-- `page`, `size`, `sort`: Spring `Pageable` 파라미터 (`size` 기본값: `20`)
+- `page`, `size`, `sort`: Spring `Pageable` (`size` 기본 `20`)
     
 
 응답:
 
-- `200 OK` -> `MeetingResponse[]` (`id` 내림차순)
+- `200 OK` -> `MeetingResponse[]` (`id` 내림차순 정렬)
     
 
-#### `GET /api/v1/projects/{projectId}/channels/date`
+### `GET /api/v1/projects/{projectId}/channels/date`
 
-특정 시간 범위 내의 프로젝트 미팅 목록을 조회합니다.
+프로젝트에서 특정 기간 내 회의(채널) 목록을 조회합니다.
 
 쿼리 파라미터(필수):
 
@@ -376,85 +534,109 @@ GitHub OAuth 로그인 플로우로 리다이렉트합니다.
 
 응답:
 
-- `200 OK` -> `MeetingResponse[]` (`id` 내림차순)
+- `200 OK` -> `MeetingResponse[]` (`id` 내림차순 정렬)
     
 
-#### `GET /api/v1/channels/{channelId}`
+### `GET /api/v1/channels/{channelId}`
 
-미팅 상세를 조회합니다.
+회의(채널) 상세를 조회합니다.
 
 응답:
 
 - `200 OK` -> `MeetingResponse`
     
 
-#### `PATCH /api/v1/channels/{channelId}`
+### `PATCH /api/v1/channels/{channelId}`
 
-미팅 제목 및/또는 시간 범위를 수정합니다.
+회의 제목 및/또는 시간 범위를 수정합니다.
 
 쿼리 파라미터(모두 선택):
 
-- `title` (string)
+- `title` (문자열)
     
 - `start` (ISO-8601 `LocalDateTime`)
     
-- `due` (ISO-8601 `LocalDateTime`)
+- `due` (ISO-8601 `LocalDateTime`, 종료 시간)
     
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-#### `DELETE /api/v1/channels/{channelId}`
+### `DELETE /api/v1/channels/{channelId}`
 
-미팅을 삭제합니다.
+회의(채널)를 삭제합니다.
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-#### `POST /api/v1/channels/{channelId}/webrtc`
+### `POST /api/v1/channels/{channelId}/webrtc`
 
-VOICE 미팅에 참여합니다(미디어 커넥션 생성 + 사용자 join 처리).
+VOICE 회의에 참여합니다(미디어 연결을 생성하고 사용자를 “참여 상태”로 기록).
 
 응답:
 
-- `200 OK` -> 커넥션 토큰(string)
+- `200 OK` -> connection token (문자열)
     
-- `409 Conflict`: 미팅 모드가 `VOICE`가 아닐 때
+- 회의 모드가 `VOICE`가 아니면 `409 Conflict`
     
 
-#### `DELETE /api/v1/channels/{channelId}/webrtc`
+### `DELETE /api/v1/channels/{channelId}/webrtc`
 
-VOICE 미팅에서 나갑니다(미디어 커넥션 종료 + 사용자 leave 처리).
+VOICE 회의에서 나갑니다(미디어 연결을 닫고 사용자를 “퇴장 상태”로 기록).
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
-- `409 Conflict`: 미팅 모드가 `VOICE`가 아닐 때
+- 회의 모드가 `VOICE`가 아니면 `409 Conflict`
     
 
-#### `GET /api/v1/channels/{channelId}/webrtc/users`
+### `GET /api/v1/channels/{channelId}/webrtc/users`
 
-VOICE 미팅에 연결된 사용자 목록을 조회합니다.
+VOICE 회의에 연결된 사용자 목록을 조회합니다.
 
 응답:
 
 - `200 OK` -> `UserResponse[]`
     
-- `409 Conflict`: 미팅 모드가 `VOICE`가 아닐 때
+- 회의 모드가 `VOICE`가 아니면 `409 Conflict`
     
 
-### Chat Messages
+### `POST /api/v1/channels/{channelId}/recording/start`
 
-#### `POST /api/v1/channels/{channelId}/chats`
+VOICE 회의 녹화를 시작합니다.
+
+응답:
+
+- `200 OK` -> recording id (long)
+    
+
+```json
+789
+```
+
+### `POST /api/v1/channels/{channelId}/recording/stop/{recordId}`
+
+VOICE 회의 녹화를 종료합니다.
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+---
+
+## Chat Messages
+
+### `POST /api/v1/channels/{channelId}/chats`
 
 채널에 채팅 메시지를 전송합니다.
 
-요청 바디:
+요청 본문:
 
 ```json
 {
@@ -464,30 +646,30 @@ VOICE 미팅에 연결된 사용자 목록을 조회합니다.
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-#### `GET /api/v1/channels/{channelId}/chats`
+### `GET /api/v1/channels/{channelId}/chats`
 
 채널의 채팅 메시지 목록을 조회합니다.
 
 쿼리 파라미터:
 
-- `lastId` (선택): 이전 페이지 마지막 채팅 id
+- `lastId`(선택): 이전 페이지 마지막 채팅 id
     
-- `page`, `size`, `sort`: Spring `Pageable` 파라미터 (`size` 기본값: `20`)
+- `page`, `size`, `sort`: Spring `Pageable` (`size` 기본 `20`)
     
 
 응답:
 
-- `200 OK` -> `ChatResponse[]` (`id` 오름차순)
+- `200 OK` -> `ChatResponse[]` (`id` 오름차순 정렬)
     
 
-#### `PATCH /api/v1/channels/chats/{chatId}`
+### `PATCH /api/v1/channels/chats/{chatId}`
 
 채팅 메시지를 수정합니다(작성자만 가능).
 
-요청 바디:
+요청 본문:
 
 ```json
 {
@@ -497,50 +679,62 @@ VOICE 미팅에 연결된 사용자 목록을 조회합니다.
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-#### `DELETE /api/v1/channels/chats/{chatId}`
+### `DELETE /api/v1/channels/chats/{chatId}`
 
 채팅 메시지를 삭제합니다(작성자만 가능).
 
 응답:
 
-- `200 OK` (바디 없음)
+- `200 OK` (빈 본문)
     
 
-### SSE (Server-Sent Events)
+---
 
-#### `GET /api/v1/channels/{channelId}/stream`
+## SSE (Server-Sent Events)
 
-채널의 실시간 채팅 이벤트를 구독합니다. 사용자는 해당 채널의 프로젝트 멤버여야 합니다.
+### `GET /api/v1/channels/{channelId}/stream`
+
+채널의 실시간 이벤트를 구독합니다. 사용자는 채널이 속한 프로젝트의 멤버여야 합니다.
 
 응답:
 
-- `200 OK` + `Content-Type: text/event-stream`
+- `200 OK`, `Content-Type: text/event-stream`
     
-- `403 Forbidden`: 사용자가 멤버가 아닐 때
+- 프로젝트 멤버가 아니면 `403 Forbidden`
     
 
 Emitter 동작:
 
-- 타임아웃: 30분 (클라이언트는 재연결 필요)
+- 타임아웃: 30분(클라이언트는 재연결 필요)
     
-- Keep-alive: 20초마다 `ping` 이벤트
-    
-
-이벤트 종류:
-
-- `message`: 새 채팅 메시지 생성 시
-    
-- `chat_update`: 채팅 메시지 수정 시
-    
-- `chat_delete`: 채팅 메시지 삭제 시
-    
-- `ping`: keep-alive 이벤트(빈 문자열 데이터)
+- Keep-alive: 20초마다 `ping` 이벤트 전송
     
 
-이벤트 페이로드:
+이벤트:
+
+- `message`: 새 채팅 메시지
+    
+- `chat_update`: 채팅 수정
+    
+- `chat_delete`: 채팅 삭제
+    
+- `media_participant_joined`
+    
+- `media_participant_left`
+    
+- `media_recording_start`
+    
+- `media_recording_stop`
+    
+- `media_error`
+    
+- `ping`
+    
+
+이벤트 페이로드 예시:
 
 `message` data:
 
@@ -572,20 +766,236 @@ Emitter 동작:
 }
 ```
 
-비고:
+`media_participant_joined` data:
 
-- `message` 이벤트는 채널 id(미팅 id 또는 프로젝트 id) 기준으로 브로드캐스트됩니다.
+```json
+{
+  "channelId": 1,
+  "timestamp": "2026-01-26T14:30:00",
+  "sessionId": "session-id",
+  "connectionId": "connection-id",
+  "user": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" }
+}
+```
+
+`media_participant_left` data:
+
+```json
+{
+  "channelId": 1,
+  "timestamp": "2026-01-26T14:30:00",
+  "sessionId": "session-id",
+  "connectionId": "connection-id",
+  "user": { "id": 10, "githubId": 999999, "githubLogin": "octocat", "name": "Octo Cat", "avatarUrl": "https://...", "createdAt": "2026-01-26T14:30:00", "lastLoginAt": "2026-01-26T14:30:00" }
+}
+```
+
+`media_recording_start` data:
+
+```json
+{
+  "channelId": 1,
+  "timestamp": "2026-01-26T14:30:00",
+  "sessionId": "session-id"
+}
+```
+
+`media_recording_stop` data:
+
+```json
+{
+  "channelId": 1,
+  "timestamp": "2026-01-26T14:30:00",
+  "sessionId": "session-id"
+}
+```
+
+`media_error` data:
+
+```json
+{
+  "channelId": 1,
+  "errorResponse": { "StatusCode": "INTERNAL_SERVER_ERROR", "Message": "..." }
+}
+```
+
+참고:
+
+- 현재 `chat_update`와 `chat_delete`는 **채널 id 대신 `projectId`를 채널 id처럼 사용하여 브로드캐스트**되고 있습니다.  
+    이 업데이트를 받아야 하는 클라이언트는 `/api/v1/channels/{projectId}/stream`도 함께 구독해야 합니다.
     
-- `chat_update`, `chat_delete` 이벤트는 현재 `projectId` 기준으로 브로드캐스트됩니다.  
-    미팅 메시지 업데이트가 필요한 클라이언트는 부모 프로젝트 채널도 함께 구독해야 합니다.
+
+### `GET /api/v1/projects/{projectId}/stream`
+
+프로젝트 단위 이벤트를 구독합니다. 사용자는 해당 프로젝트 멤버여야 합니다.
+
+응답:
+
+- `200 OK`, `Content-Type: text/event-stream`
+    
+- 프로젝트 멤버가 아니면 `403 Forbidden`
     
 
-### Issues
+Emitter 동작:
 
-#### `GET /api/v1/projects/{projectId}/issues/active`
+- 타임아웃: 30분(클라이언트는 재연결 필요)
+    
+- Keep-alive: 20초마다 `ping` 이벤트 전송
+    
 
-프로젝트의 활성(OPEN) 이슈를 최대 5개까지 조회하며, `updatedAt` 내림차순으로 정렬합니다.
+이벤트:
+
+- `ai_sort_result`: AI 정렬 결과(이슈 id 배열)
+    
+- `ping`
+    
+
+`ai_sort_result` data:
+
+```json
+[100, 101, 102]
+```
+
+참고:
+
+- `GET /api/v1/projects/{projectId}/issues/active`는 정렬 작업을 큐에 넣고, 비동기 결과가 오면 `ai_sort_result` 이벤트를 트리거합니다.
+    
+
+---
+
+## Issues
+
+### `GET /api/v1/projects/{projectId}/issues/active`
+
+프로젝트의 활성(OPEN) 이슈를 최대 5개 반환합니다. `updatedAt` 내림차순으로 정렬됩니다.
 
 응답:
 
 - `200 OK` -> `IssueResponse[]`
+    
+
+참고:
+
+- 동시에 이 이슈들에 대해 AI 정렬 작업도 큐에 넣습니다.
+    
+
+### `GET /api/v1/projects/{projectId}/issues`
+
+프로젝트의 모든 이슈를 조회합니다.
+
+응답:
+
+- `200 OK` -> `IssueResponse[]`
+    
+
+### `POST /api/v1/projects/{projectId}/issue/analyze`
+
+이슈 우선순위를 분석합니다(드래프트 이슈를 만들고 AI 분석 작업을 큐에 넣음).
+
+요청 본문:
+
+```json
+{
+  "title": "Fix bug",
+  "body": "Steps to reproduce...",
+  "status": "OPEN",
+  "assigneeIds": [10, 11]
+}
+```
+
+응답:
+
+- `200 OK` -> `AiResponse`
+    
+
+### `POST /api/v1/projects/{projectId}/issues`
+
+(analyze로 만들어진) 드래프트 이슈를 기반으로 GitHub 이슈를 생성합니다.
+
+요청 본문:
+
+```json
+{
+  "orgName": "org",
+  "repoName": "repo",
+  "issueId": 100,
+  "issueStatus": "OPEN",
+  "issuePriority": "HIGH",
+  "title": "Fix bug",
+  "body": "Steps to reproduce...",
+  "assigneeIds": [10, 11]
+}
+```
+
+참고:
+
+- `issueId`는 **동일 작성자가 analyze로 생성한 드래프트 이슈**여야 합니다.
+    
+- `issueStatus`는 입력은 받지만 현재 서버에서는 사용하지 않습니다.
+    
+
+응답:
+
+- `200 OK` -> `IssueResponse[]` (0개 또는 1개)
+    
+
+### `PATCH /api/v1/projects/{projectId}/issues/{issueId}`
+
+이슈를 수정합니다(작성자만 가능).
+
+요청 본문:
+
+```json
+{
+  "title": "Updated title",
+  "body": "Updated body",
+  "assigneeIds": [10]
+}
+```
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+### `DELETE /api/v1/projects/{projectId}/issues/{issueId}`
+
+이슈를 삭제합니다(작성자만 가능).
+
+응답:
+
+- `200 OK` (빈 본문)
+    
+
+---
+
+## Webhooks
+
+### `POST /api/v1/webhooks/openvidu`
+
+OpenVidu 서버의 웹훅을 수신하는 엔드포인트입니다.
+
+헤더:
+
+- `X-OpenVidu-Token`: (선택) 공유 시크릿(서버에서 설정됨)
+    
+
+요청 본문:
+
+- OpenVidu 웹훅 JSON payload (이벤트명은 `event` 필드에 포함)
+    
+
+응답:
+
+- 성공 시 또는 payload 파싱에 실패해도 `200 OK`
+    
+- `X-OpenVidu-Token`이 서버에 설정되어 있고 값이 불일치하면 `401 Unauthorized`
+    
+
+---
+
+원하면 다음도 해줄게:
+
+- 이 문서를 **README/MkDocs 스타일로 더 “문서답게” 다듬기**(표/섹션 정리, 응답 코드 일관화)
+    
+- `ErrorResponse`의 필드명이 `StatusCode/Message`로 되어 있는데, 실제 JSON 프로퍼티가 `statusCode/message`면 문서도 그에 맞춰 정리하기

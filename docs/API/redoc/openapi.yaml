@@ -3,29 +3,24 @@ info:
   title: Didit Server API
   version: "v1"
   description: |
-    Base path: /api/v1
-    JSESSIONID 쿠키 기반 세션 인증 (GitHub OAuth2).
+    기본 경로(Base path): /api/v1
+    GitHub OAuth2 기반 세션 쿠키(JSESSIONID)로 인증합니다.
 servers:
+  - url: http://localhost:8080/api/v1
+    description: 로컬 개발 환경
   - url: https://api.did-it.xyz/api/v1
-    description: 배포 서버
-security:
-  - cookieAuth: []
+    description: 배포된 서버
 tags:
   - name: Auth
-    description: 인증
   - name: Projects
-    description: 프로젝트
   - name: Invites
-    description: 초대
   - name: Meetings
-    description: 회의(채널)
-  - name: Chats
-    description: 채팅
+  - name: Chat
   - name: SSE
-    description: SSE(실시간 이벤트)
   - name: Issues
-    description: 이슈
-
+  - name: Webhooks
+security:
+  - cookieAuth: []
 paths:
   /auth/login:
     get:
@@ -34,21 +29,20 @@ paths:
       security: []
       responses:
         "302":
-          description: /oauth2/authorization/github 로 리다이렉트
+          description: `/oauth2/authorization/github` 로 리다이렉트
           headers:
             Location:
-              description: 리다이렉트 대상
               schema:
                 type: string
 
   /auth/logout:
     post:
       tags: [Auth]
-      summary: 로그아웃(세션 무효화)
+      summary: 로그아웃 및 세션 쿠키 제거
       security: []
       responses:
-        "302":
-          description: / 로 리다이렉트
+        "200":
+          description: 로그아웃 완료
 
   /auth/me:
     get:
@@ -62,12 +56,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponse"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: 인증되지 않음(Unauthorized)
 
   /projects:
     get:
       tags: [Projects]
-      summary: 현재 사용자의 프로젝트 목록 조회
+      summary: 로그인한 사용자의 프로젝트 목록 조회
       responses:
         "200":
           description: 성공
@@ -79,7 +73,7 @@ paths:
                   $ref: "#/components/schemas/ProjectResponse"
     post:
       tags: [Projects]
-      summary: 프로젝트 생성 및 생성자를 ADMIN으로 등록
+      summary: 프로젝트 생성
       requestBody:
         required: true
         content:
@@ -88,14 +82,12 @@ paths:
               $ref: "#/components/schemas/AddProjectRequest"
       responses:
         "200":
-          description: 성공
-        "400":
-          $ref: "#/components/responses/BadRequest"
+          description: 생성 완료
 
   /projects/recents:
     get:
       tags: [Projects]
-      summary: 최근 프로젝트 조회(최대 4개)
+      summary: 최근 조회한 프로젝트 목록 조회
       responses:
         "200":
           description: 성공
@@ -109,9 +101,9 @@ paths:
   /projects/{projectId}:
     get:
       tags: [Projects]
-      summary: 프로젝트 상세 조회(최근 조회 기록 갱신 포함)
+      summary: 프로젝트 상세 조회
       parameters:
-        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/ProjectId"
       responses:
         "200":
           description: 성공
@@ -119,13 +111,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProjectResponse"
+    delete:
+      tags: [Projects]
+      summary: 프로젝트 삭제(소유자만)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: 삭제 완료
+    patch:
+      tags: [Projects]
+      summary: 프로젝트 저장소 정보(repo) 업데이트
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRepoRequest"
+      responses:
+        "200":
+          description: 업데이트 완료
 
   /projects/{projectId}/participants:
     get:
       tags: [Projects]
       summary: 프로젝트 참여자 목록 조회
       parameters:
-        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/ProjectId"
       responses:
         "200":
           description: 성공
@@ -136,10 +150,83 @@ paths:
                 items:
                   $ref: "#/components/schemas/UserResponse"
 
+  /projects/{projectId}/participants/{userId}:
+    delete:
+      tags: [Projects]
+      summary: 참여자 제거(소유자만)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: 제거 완료
+
+  /projects/{projectId}/leave:
+    delete:
+      tags: [Projects]
+      summary: 프로젝트 탈퇴
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: 탈퇴 완료
+
+  /projects/{projectId}/github/validate:
+    post:
+      tags: [Projects]
+      summary: 프로젝트의 GitHub 저장소 유효성 검증
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateGithubRequest"
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GithubRepoResponse"
+
+  /projects/{projectId}/owner:
+    patch:
+      tags: [Projects]
+      summary: 프로젝트 소유권 이전
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferOwnerRequest"
+      responses:
+        "200":
+          description: 이전 완료
+
+  /projects/{projectId}/name:
+    patch:
+      tags: [Projects]
+      summary: 프로젝트 이름 변경
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectNameRequest"
+      responses:
+        "200":
+          description: 변경 완료
+
   /projects/invites:
     post:
       tags: [Invites]
-      summary: 프로젝트 초대 코드 생성(관리자만)
+      summary: 초대 코드 생성(관리자만)
       requestBody:
         required: true
         content:
@@ -154,15 +241,13 @@ paths:
               schema:
                 type: string
                 format: uuid
-        "400":
-          $ref: "#/components/responses/BadRequest"
 
   /projects/invites/{inviteCode}:
     get:
       tags: [Invites]
       summary: 초대 코드로 프로젝트 조회
       parameters:
-        - $ref: "#/components/parameters/inviteCode"
+        - $ref: "#/components/parameters/InviteCode"
       responses:
         "200":
           description: 성공
@@ -171,24 +256,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProjectResponse"
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: 잘못된 요청(잘못된 UUID)
     post:
       tags: [Invites]
-      summary: 초대 코드로 프로젝트 참가
+      summary: 초대 코드로 프로젝트 참여
       parameters:
-        - $ref: "#/components/parameters/inviteCode"
+        - $ref: "#/components/parameters/InviteCode"
       responses:
         "200":
-          description: 성공
+          description: 참여 완료
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: 잘못된 요청(잘못된 UUID)
 
   /projects/{projectId}/add-channel:
     post:
       tags: [Meetings]
-      summary: 프로젝트 내 회의(채널) 생성
+      summary: 회의(채널) 생성(관리자만, 상태 RUNNING)
       parameters:
-        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/ProjectId"
       requestBody:
         required: true
         content:
@@ -197,7 +282,7 @@ paths:
               $ref: "#/components/schemas/CreateMeetingRequest"
       responses:
         "200":
-          description: 성공
+          description: 생성된 meeting id
           content:
             application/json:
               schema:
@@ -207,9 +292,9 @@ paths:
   /projects/{projectId}/book-channel:
     post:
       tags: [Meetings]
-      summary: 프로젝트 내 회의(채널) 예약
+      summary: 회의(채널) 예약(관리자만, 상태 SCHEDULED)
       parameters:
-        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/ProjectId"
       requestBody:
         required: true
         content:
@@ -218,26 +303,34 @@ paths:
               $ref: "#/components/schemas/BookMeetingRequest"
       responses:
         "200":
-          description: 성공
+          description: 생성된 meeting id
           content:
             application/json:
               schema:
                 type: integer
                 format: int64
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: 잘못된 요청(시작 시간이 종료 시간보다 늦음)
 
   /projects/{projectId}/channels:
     get:
       tags: [Meetings]
       summary: 프로젝트 내 회의(채널) 목록 조회
       parameters:
-        - $ref: "#/components/parameters/projectId"
-        - $ref: "#/components/parameters/meetingStatus"
-        - $ref: "#/components/parameters/cursor"
-        - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/size"
-        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/ProjectId"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/MeetingStatus"
+        - name: cursor
+          in: query
+          description: 이전 페이지의 마지막 항목 id(첫 페이지는 0)
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
       responses:
         "200":
           description: 성공
@@ -251,11 +344,21 @@ paths:
   /projects/{projectId}/channels/date:
     get:
       tags: [Meetings]
-      summary: 프로젝트 내 회의(채널) 목록 조회(시간 범위 필터)
+      summary: 기간 범위로 프로젝트 회의(채널) 목록 조회
       parameters:
-        - $ref: "#/components/parameters/projectId"
-        - $ref: "#/components/parameters/startDateTime"
-        - $ref: "#/components/parameters/endDateTime"
+        - $ref: "#/components/parameters/ProjectId"
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
       responses:
         "200":
           description: 성공
@@ -271,7 +374,7 @@ paths:
       tags: [Meetings]
       summary: 회의(채널) 상세 조회
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
           description: 성공
@@ -283,69 +386,66 @@ paths:
       tags: [Meetings]
       summary: 회의 제목 및/또는 시간 범위 수정
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
         - name: title
           in: query
-          required: false
           schema:
             type: string
-            maxLength: 50
         - name: start
           in: query
-          required: false
           schema:
             type: string
             format: date-time
         - name: due
           in: query
-          required: false
+          description: 종료 시간
           schema:
             type: string
             format: date-time
       responses:
         "200":
-          description: 성공
+          description: 수정 완료
     delete:
       tags: [Meetings]
       summary: 회의(채널) 삭제
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
-          description: 성공
+          description: 삭제 완료
 
   /channels/{channelId}/webrtc:
     post:
       tags: [Meetings]
-      summary: VOICE 회의 참여(미디어 커넥션 생성)
+      summary: VOICE 회의(WebRTC) 참여
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
-          description: 성공
+          description: 연결 토큰(Connection token)
           content:
             application/json:
               schema:
                 type: string
         "409":
-          $ref: "#/components/responses/Conflict"
+          description: 충돌(회의 모드가 VOICE가 아님)
     delete:
       tags: [Meetings]
-      summary: VOICE 회의 나가기(미디어 커넥션 종료)
+      summary: VOICE 회의(WebRTC) 퇴장
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
-          description: 성공
+          description: 퇴장 완료
         "409":
-          $ref: "#/components/responses/Conflict"
+          description: 충돌(회의 모드가 VOICE가 아님)
 
   /channels/{channelId}/webrtc/users:
     get:
       tags: [Meetings]
-      summary: VOICE 회의에 접속 중인 사용자 목록 조회
+      summary: VOICE 회의에 연결된 사용자 목록 조회
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
           description: 성공
@@ -356,14 +456,44 @@ paths:
                 items:
                   $ref: "#/components/schemas/UserResponse"
         "409":
-          $ref: "#/components/responses/Conflict"
+          description: 충돌(회의 모드가 VOICE가 아님)
+
+  /channels/{channelId}/recording/start:
+    post:
+      tags: [Meetings]
+      summary: VOICE 회의 녹화 시작
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+      responses:
+        "200":
+          description: 녹화 id
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        "409":
+          description: 충돌(회의 모드가 VOICE가 아님)
+
+  /channels/{channelId}/recording/stop/{recordId}:
+    post:
+      tags: [Meetings]
+      summary: VOICE 회의 녹화 중지
+      parameters:
+        - $ref: "#/components/parameters/ChannelId"
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: 중지 완료
+        "409":
+          description: 충돌(회의 모드가 VOICE가 아님)
 
   /channels/{channelId}/chats:
     post:
-      tags: [Chats]
+      tags: [Chat]
       summary: 채널에 채팅 메시지 전송
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       requestBody:
         required: true
         content:
@@ -372,16 +502,20 @@ paths:
               $ref: "#/components/schemas/SendMessageRequest"
       responses:
         "200":
-          description: 성공
+          description: 전송 완료
     get:
-      tags: [Chats]
+      tags: [Chat]
       summary: 채널의 채팅 메시지 목록 조회
       parameters:
-        - $ref: "#/components/parameters/channelId"
-        - $ref: "#/components/parameters/lastId"
-        - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/size"
-        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/ChannelId"
+        - name: lastId
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
       responses:
         "200":
           description: 성공
@@ -394,10 +528,10 @@ paths:
 
   /channels/chats/{chatId}:
     patch:
-      tags: [Chats]
+      tags: [Chat]
       summary: 채팅 메시지 수정(작성자만)
       parameters:
-        - $ref: "#/components/parameters/chatId"
+        - $ref: "#/components/parameters/ChatId"
       requestBody:
         required: true
         content:
@@ -406,28 +540,140 @@ paths:
               $ref: "#/components/schemas/UpdateChatMessage"
       responses:
         "200":
-          description: 성공
+          description: 수정 완료
     delete:
-      tags: [Chats]
+      tags: [Chat]
       summary: 채팅 메시지 삭제(작성자만)
       parameters:
-        - $ref: "#/components/parameters/chatId"
+        - $ref: "#/components/parameters/ChatId"
       responses:
         "200":
-          description: 성공
+          description: 삭제 완료
 
   /channels/{channelId}/stream:
     get:
       tags: [SSE]
-      summary: 실시간 채팅 이벤트 구독(SSE)
+      summary: 채널 SSE 스트림 구독
+      description: |
+        채널의 채팅 및 미디어 이벤트를 전송합니다.
+        참고: `chat_update`와 `chat_delete`는 projectId를 채널 id로 사용해 브로드캐스트됩니다.
       parameters:
-        - $ref: "#/components/parameters/channelId"
+        - $ref: "#/components/parameters/ChannelId"
       responses:
         "200":
-          description: text/event-stream (message, chat_update, chat_delete, ping)
+          description: text/event-stream
           content:
             text/event-stream:
               schema:
+                type: string
+              examples:
+                message:
+                  summary: message
+                  value: |
+                    event: message
+                    data: {"channelId":1,"senderId":10,"content":"Hello","sentAtEpochMs":1738209000000}
+                chat_update:
+                  summary: chat_update
+                  value: |
+                    event: chat_update
+                    data: {"chatId":1000,"content":"Edited","editedAt":"2026-01-26T14:30:00"}
+                chat_delete:
+                  summary: chat_delete
+                  value: |
+                    event: chat_delete
+                    data: {"chatId":1000,"content":"Original message"}
+                media_participant_joined:
+                  summary: media_participant_joined
+                  value: |
+                    event: media_participant_joined
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id","connectionId":"conn-id","user":{"id":10,"githubId":999999,"githubLogin":"octocat","name":"Octo Cat","avatarUrl":"https://...","createdAt":"2026-01-26T14:30:00","lastLoginAt":"2026-01-26T14:30:00"}}
+                media_participant_left:
+                  summary: media_participant_left
+                  value: |
+                    event: media_participant_left
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id","connectionId":"conn-id","user":{"id":10,"githubId":999999,"githubLogin":"octocat","name":"Octo Cat","avatarUrl":"https://...","createdAt":"2026-01-26T14:30:00","lastLoginAt":"2026-01-26T14:30:00"}}
+                media_recording_start:
+                  summary: media_recording_start
+                  value: |
+                    event: media_recording_start
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id"}
+                media_recording_stop:
+                  summary: media_recording_stop
+                  value: |
+                    event: media_recording_stop
+                    data: {"channelId":1,"timestamp":"2026-01-26T14:30:00","sessionId":"session-id"}
+                media_error:
+                  summary: media_error
+                  value: |
+                    event: media_error
+                    data: {"channelId":1,"errorResponse":{"statusCode":"INTERNAL_SERVER_ERROR","message":"..."}}
+                ping:
+                  summary: ping
+                  value: |
+                    event: ping
+                    data: ""
+          x-sse-events:
+            - name: message
+              payload:
+                $ref: "#/components/schemas/SseMessagePayload"
+            - name: chat_update
+              payload:
+                $ref: "#/components/schemas/SseChatUpdatePayload"
+            - name: chat_delete
+              payload:
+                $ref: "#/components/schemas/SseChatDeletePayload"
+            - name: media_participant_joined
+              payload:
+                $ref: "#/components/schemas/SseMediaParticipantPayload"
+            - name: media_participant_left
+              payload:
+                $ref: "#/components/schemas/SseMediaParticipantPayload"
+            - name: media_recording_start
+              payload:
+                $ref: "#/components/schemas/SseMediaRecordingPayload"
+            - name: media_recording_stop
+              payload:
+                $ref: "#/components/schemas/SseMediaRecordingPayload"
+            - name: media_error
+              payload:
+                $ref: "#/components/schemas/SseMediaErrorPayload"
+            - name: ping
+              payload:
+                type: string
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /projects/{projectId}/stream:
+    get:
+      tags: [SSE]
+      summary: 프로젝트 SSE 스트림 구독
+      description: AI 정렬 결과 및 ping 이벤트를 전송합니다.
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: text/event-stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              examples:
+                ai_sort_result:
+                  summary: ai_sort_result
+                  value: |
+                    event: ai_sort_result
+                    data: [100,101,102]
+                ping:
+                  summary: ping
+                  value: |
+                    event: ping
+                    data: ""
+          x-sse-events:
+            - name: ai_sort_result
+              payload:
+                $ref: "#/components/schemas/SseAiSortResultPayload"
+            - name: ping
+              payload:
                 type: string
         "403":
           $ref: "#/components/responses/Forbidden"
@@ -435,9 +681,9 @@ paths:
   /projects/{projectId}/issues/active:
     get:
       tags: [Issues]
-      summary: 프로젝트의 활성(OPEN) 이슈 조회(최대 5개)
+      summary: 프로젝트의 활성 이슈(최대 5개) 조회
       parameters:
-        - $ref: "#/components/parameters/projectId"
+        - $ref: "#/components/parameters/ProjectId"
       responses:
         "200":
           description: 성공
@@ -448,6 +694,106 @@ paths:
                 items:
                   $ref: "#/components/schemas/IssueResponse"
 
+  /projects/{projectId}/issues:
+    get:
+      tags: [Issues]
+      summary: 프로젝트의 모든 이슈 조회
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+    post:
+      tags: [Issues]
+      summary: 드래프트 이슈로부터 GitHub 이슈 생성
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIssueRequest"
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueResponse"
+
+  /projects/{projectId}/issue/analyze:
+    post:
+      tags: [Issues]
+      summary: 이슈 우선순위 분석(드래프트 생성 + 비동기 AI)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeIssueRequest"
+      responses:
+        "200":
+          description: 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiResponse"
+
+  /projects/{projectId}/issues/{issueId}:
+    patch:
+      tags: [Issues]
+      summary: 이슈 수정(작성자만)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/IssueId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateIssueRequest"
+      responses:
+        "200":
+          description: 수정 완료
+    delete:
+      tags: [Issues]
+      summary: 이슈 삭제(작성자만)
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/IssueId"
+      responses:
+        "200":
+          description: 삭제 완료
+
+  /webhooks/openvidu:
+    post:
+      tags: [Webhooks]
+      summary: OpenVidu 웹훅 엔드포인트
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: 성공
+        "401":
+          description: 인증 실패(잘못된 X-OpenVidu-Token)
+
 components:
   securitySchemes:
     cookieAuth:
@@ -456,114 +802,79 @@ components:
       name: JSESSIONID
 
   parameters:
-    projectId:
+    ProjectId:
       name: projectId
       in: path
       required: true
       schema:
         type: integer
         format: int64
-    channelId:
+    ChannelId:
       name: channelId
       in: path
       required: true
       schema:
         type: integer
         format: int64
-    chatId:
-      name: chatId
+    IssueId:
+      name: issueId
       in: path
       required: true
       schema:
         type: integer
         format: int64
-    inviteCode:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    InviteCode:
       name: inviteCode
       in: path
       required: true
       schema:
         type: string
         format: uuid
-    meetingStatus:
-      name: status
-      in: query
-      required: false
-      schema:
-        $ref: "#/components/schemas/MeetingStatus"
-    cursor:
-      name: cursor
-      in: query
-      required: false
+    RecordId:
+      name: recordId
+      in: path
+      required: true
       schema:
         type: integer
         format: int64
-        description: 이전 페이지의 마지막 아이템 id (첫 페이지는 0 사용)
-    lastId:
-      name: lastId
-      in: query
-      required: false
+    ChatId:
+      name: chatId
+      in: path
+      required: true
       schema:
         type: integer
         format: int64
-    page:
+    Page:
       name: page
       in: query
-      required: false
       schema:
         type: integer
+       format: int32
         minimum: 0
-        default: 0
-    size:
+    Size:
       name: size
       in: query
-      required: false
       schema:
         type: integer
+        format: int32
         minimum: 1
-        default: 20
-    sort:
+    Sort:
       name: sort
       in: query
-      required: false
+      description: `property,asc|desc` 형식의 정렬 기준
       schema:
         type: string
-        description: Spring 정렬 파라미터 예) "createdAt,desc"
-    startDateTime:
-      name: start
-      in: query
-      required: true
-      schema:
-        type: string
-        format: date-time
-    endDateTime:
-      name: end
-      in: query
-      required: true
-      schema:
-        type: string
-        format: date-time
 
   responses:
-    BadRequest:
-      description: 잘못된 요청 (body가 비어있을 수 있음)
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResponse"
-    Unauthorized:
-      description: 인증 필요 (body가 비어있을 수 있음)
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResponse"
     Forbidden:
-      description: 권한 없음 (body가 비어있을 수 있음)
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/ErrorResponse"
-    Conflict:
-      description: 충돌(Conflict) (body가 비어있을 수 있음)
+      description: 접근 금지(Forbidden, 본문이 비어있을 수도 있음)
       content:
         application/json:
           schema:
@@ -572,53 +883,210 @@ components:
   schemas:
     ErrorResponse:
       type: object
-      description: "에러 응답 바디(직렬화 설정에 따라 필드 케이스가 달라질 수 있음)."
       properties:
         statusCode:
           type: string
+          description: HttpStatus enum 이름
         message:
           type: string
-      example:
-        statusCode: NOT_FOUND
-        message: "..."
+      required: [statusCode, message]
 
-    MeetingMode:
-      type: string
-      enum: [CHAT, VOICE]
-      description: 회의 모드(채팅/음성)
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+        repoId:
+          type: integer
+          format: int64
+        repoFullName:
+          type: string
+        thumbnailUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-    MeetingStatus:
-      type: string
-      enum: [SCHEDULED, RUNNING, ENDED]
-      description: 회의 상태(예정/진행중/종료)
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        githubId:
+          type: integer
+          format: int64
+        githubLogin:
+          type: string
+        name:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
 
-    IssueStatus:
-      type: string
-      enum: [OPEN, CLOSED]
-      description: 이슈 상태(열림/닫힘)
+    MeetingResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        createdBy:
+          $ref: "#/components/schemas/UserResponse"
+        sessionId:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/MeetingStatus"
+        mode:
+          $ref: "#/components/schemas/MeetingMode"
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-    IssuePriority:
-      type: string
-      enum: [HIGH, MEDIUM, LOW]
-      description: 이슈 우선순위(높음/중간/낮음)
+    IssueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        githubIssueId:
+          type: integer
+          format: int64
+          nullable: true
+        issueNo:
+          type: integer
+          format: int32
+          nullable: true
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        priority:
+          $ref: "#/components/schemas/IssuePriority"
+        author:
+          $ref: "#/components/schemas/UserResponse"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+          nullable: true
+        assignees:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
 
-    MessageType:
-      type: string
-      enum: [TEXT, SYSTEM]
-      description: 메시지 타입(일반 텍스트/시스템)
+    ProjectRecentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user:
+          $ref: "#/components/schemas/UserResponse"
+        project:
+          $ref: "#/components/schemas/ProjectResponse"
+        lastViewedAt:
+          type: string
+          format: date-time
+
+    ChatResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        messageType:
+          $ref: "#/components/schemas/MessageType"
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        editedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AiResponse:
+      type: object
+      properties:
+        issueId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        body:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        priority:
+          $ref: "#/components/schemas/IssuePriority"
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    GithubRepoResponse:
+      type: object
+      properties:
+        repoId:
+          type: integer
+          format: int64
+        repoName:
+          type: string
 
     AddProjectRequest:
       type: object
-      required: [projectName, githubUrl]
+      required: [projectName]
       properties:
         projectName:
           type: string
           maxLength: 64
-          description: 프로젝트 이름
         githubUrl:
           type: string
           format: uri
-          description: GitHub 저장소 URL
 
     AddProjectInviteRequest:
       type: object
@@ -627,12 +1095,10 @@ components:
         projectId:
           type: integer
           format: int64
-          description: 프로젝트 ID
         expireDate:
           type: string
           format: date-time
           nullable: true
-          description: 만료 일시(없으면 null)
 
     CreateMeetingRequest:
       type: object
@@ -641,7 +1107,6 @@ components:
         title:
           type: string
           maxLength: 50
-          description: 회의 제목
         mode:
           $ref: "#/components/schemas/MeetingMode"
 
@@ -652,15 +1117,12 @@ components:
         title:
           type: string
           maxLength: 50
-          description: 회의 제목
         start:
           type: string
           format: date-time
-          description: 시작 일시
         end:
           type: string
           format: date-time
-          description: 종료 일시
 
     SendMessageRequest:
       type: object
@@ -668,206 +1130,192 @@ components:
       properties:
         content:
           type: string
-          description: 메시지 내용
 
     UpdateChatMessage:
       type: object
-      required: [content]
       properties:
         content:
           type: string
-          description: 수정할 메시지 내용
 
-    UserResponse:
+    AnalyzeIssueRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        status:
+          $ref: "#/components/schemas/IssueStatus"
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    CreateIssueRequest:
       type: object
       properties:
-        id:
+        orgName:
+          type: string
+        repoName:
+          type: string
+        issueId:
           type: integer
           format: int64
-          description: 사용자 ID
-        githubId:
-          type: integer
-          format: int64
-          description: GitHub 사용자 ID
-        githubLogin:
+        issueStatus:
+          $ref: "#/components/schemas/IssueStatus"
+        issuePriority:
+          $ref: "#/components/schemas/IssuePriority"
+        title:
           type: string
-          description: GitHub 로그인(아이디)
-        name:
+        body:
           type: string
-          nullable: true
-          description: 사용자 이름(없을 수 있음)
-        avatarUrl:
-          type: string
-          format: uri
-          nullable: true
-          description: 아바타 URL(없을 수 있음)
-        createdAt:
-          type: string
-          format: date-time
-          description: 생성 일시
-        lastLoginAt:
-          type: string
-          format: date-time
-          description: 마지막 로그인 일시
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
 
-    ProjectResponse:
+    UpdateIssueRequest:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: 프로젝트 ID
-        name:
+        title:
           type: string
-          description: 프로젝트 이름
-        ownerId:
-          type: integer
-          format: int64
-          description: 소유자 사용자 ID
+        body:
+          type: string
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
+    ValidateGithubRequest:
+      type: object
+      required: [orgName, repoName]
+      properties:
+        orgName:
+          type: string
+        repoName:
+          type: string
+
+    UpdateRepoRequest:
+      type: object
+      required: [repoId, repoFullName]
+      properties:
         repoId:
           type: integer
           format: int64
-          description: GitHub 저장소 ID
         repoFullName:
           type: string
-          description: 저장소 전체 이름(owner/repo)
-        thumbnailUrl:
-          type: string
-          format: uri
-          nullable: true
-          description: 썸네일 URL(없을 수 있음)
-        createdAt:
-          type: string
-          format: date-time
-          description: 생성 일시
-        updatedAt:
-          type: string
-          format: date-time
-          description: 수정 일시
 
-    MeetingResponse:
+    TransferOwnerRequest:
+      type: object
+      required: [newOwnerId]
+      properties:
+        newOwnerId:
+          type: integer
+          format: int64
+
+    UpdateProjectNameRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+
+    MeetingMode:
+      type: string
+      enum: [CHAT, VOICE]
+    MeetingStatus:
+      type: string
+      enum: [SCHEDULED, RUNNING, ENDED]
+    IssueStatus:
+      type: string
+      enum: [OPEN, CLOSED]
+    IssuePriority:
+      type: string
+      enum: [HIGH, MEDIUM, LOW]
+    MessageType:
+      type: string
+      enum: [TEXT, SYSTEM]
+
+    SseMessagePayload:
       type: object
       properties:
-        id:
+        channelId:
           type: integer
           format: int64
-          description: 회의(채널) ID
-        project:
-          $ref: "#/components/schemas/ProjectResponse"
-        createdBy:
-          $ref: "#/components/schemas/UserResponse"
-        sessionId:
+        senderId:
+          type: integer
+          format: int64
+        content:
           type: string
-          description: OpenVidu 세션 ID
-        title:
-          type: string
-          description: 회의 제목
-        status:
-          $ref: "#/components/schemas/MeetingStatus"
-        mode:
-          $ref: "#/components/schemas/MeetingMode"
-        startedAt:
-          type: string
-          format: date-time
-          description: 시작 일시
-        endedAt:
-          type: string
-          format: date-time
-          description: 종료 일시
-        createdAt:
-          type: string
-          format: date-time
-          description: 생성 일시
-        updatedAt:
-          type: string
-          format: date-time
-          description: 수정 일시
+        sentAtEpochMs:
+          type: integer
+          format: int64
 
-    IssueResponse:
+    SseChatUpdatePayload:
       type: object
       properties:
-        id:
+        chatId:
           type: integer
           format: int64
-          description: 이슈 ID
-        project:
-          $ref: "#/components/schemas/ProjectResponse"
-        githubIssueId:
-          type: integer
-          format: int64
-          description: GitHub 이슈 ID
-        issueNo:
-          type: integer
-          description: 이슈 번호(레포 내 번호)
-        title:
+        content:
           type: string
-          description: 이슈 제목
-        body:
-          type: string
-          description: 이슈 본문
-        status:
-          $ref: "#/components/schemas/IssueStatus"
-        priority:
-          $ref: "#/components/schemas/IssuePriority"
-        author:
-          $ref: "#/components/schemas/UserResponse"
-        createdAt:
-          type: string
-          format: date-time
-          description: 생성 일시
-        updatedAt:
-          type: string
-          format: date-time
-          description: 수정 일시
-        closedAt:
-          type: string
-          format: date-time
-          nullable: true
-          description: 종료(닫힘) 일시(없을 수 있음)
-        assignees:
-          type: array
-          description: 담당자 목록
-          items:
-            $ref: "#/components/schemas/UserResponse"
-
-    ProjectRecentResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 최근 프로젝트 기록 ID
-        user:
-          $ref: "#/components/schemas/UserResponse"
-        project:
-          $ref: "#/components/schemas/ProjectResponse"
-        lastViewedAt:
-          type: string
-          format: date-time
-          description: 마지막 조회 일시
-
-    ChatResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 채팅 ID
-        userId:
-          type: integer
-          format: int64
-          description: 작성자 사용자 ID
-        messageType:
-          $ref: "#/components/schemas/MessageType"
-        message:
-          type: string
-          description: 메시지 내용
-        createdAt:
-          type: string
-          format: date-time
-          description: 생성 일시
         editedAt:
           type: string
           format: date-time
-          nullable: true
-          description: 수정 일시(없을 수 있음)
+
+    SseChatDeletePayload:
+      type: object
+      properties:
+        chatId:
+          type: integer
+          format: int64
+        content:
+          type: string
+
+    SseMediaParticipantPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+        sessionId:
+          type: string
+        connectionId:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserResponse"
+
+    SseMediaRecordingPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        timestamp:
+          type: string
+          format: date-time
+        sessionId:
+          type: string
+
+    SseMediaErrorPayload:
+      type: object
+      properties:
+        channelId:
+          type: integer
+          format: int64
+        errorResponse:
+          $ref: "#/components/schemas/ErrorResponse"
+
+    SseAiSortResultPayload:
+      type: array
+      items:
+        type: integer
+        format: int64
